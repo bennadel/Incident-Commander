@@ -1,9 +1,9 @@
 
-# Node Circuit Breaker
+# Incident Commander
 
 by [Ben Nadel][bennadel] (on [Google+][googleplus])
 
-
+**[Run Incident Commander App][app]**
 
 When an **Incident** is opened at [InVision App][invisionapp], one of the engineers has 
 to run "point", acting as the liaison between the management / support teams and the 
@@ -22,3 +22,4 @@ updates into a tightly-formatted Slack message that I can quickly copy-and-paste
 [bennadel]: http://www.bennadel.com
 [googleplus]: https://plus.google.com/108976367067760160494?rel=author
 [invisionapp]: https://www.bennadel.com/invision/co-founder.htm
+[app]: https://bennadel.github.io/Incident-Commander/
