@@ -1,0 +1,47 @@
+
+<div class="date">
+
+	<select name="month" [(ngModel)]="form.month" (ngModelChange)="applyFormUpdates()">
+		<option [ngValue]="null">- -</option>
+		<option *ngFor="let m of monthOptions" [ngValue]="m">
+			{{ m.description }}
+		</option>
+	</select>
+
+	<select name="day" [(ngModel)]="form.day" (ngModelChange)="applyFormUpdates()">
+		<option [ngValue]="null">- -</option>
+		<option *ngFor="let option of dayOptions | slice:0:getDaysInMonth()" [ngValue]="option">
+			{{ option.description }}
+		</option>
+	</select>
+
+	<select name="year" [(ngModel)]="form.year" (ngModelChange)="applyFormUpdates()">
+		<option [ngValue]="null">- -</option>
+		<option *ngFor="let option of yearOptions" [ngValue]="option">
+			{{ option.description }}
+		</option>
+	</select>
+
+</div>
+
+<div class="seperator">
+	@
+</div>
+
+<div class="time">
+
+	<select name="hour" [(ngModel)]="form.hour" (ngModelChange)="applyFormUpdates()">
+		<option [ngValue]="null">- -</option>
+		<option *ngFor="let option of hourOptions" [ngValue]="option">
+			{{ option.description }}
+		</option>
+	</select>
+
+	<select name="minute" [(ngModel)]="form.minute" (ngModelChange)="applyFormUpdates()">
+		<option [ngValue]="null">- -</option>
+		<option *ngFor="let option of minuteOptions" [ngValue]="option">
+			{{ option.description }}
+		</option>
+	</select>
+
+</div>

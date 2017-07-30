@@ -1,0 +1,24 @@
+
+:host {
+	display: inline-block ;
+	font-size: inherit ;
+}
+
+select {
+	font-size: inherit ;
+}
+
+div.date {
+	display: inline-block ;
+}
+
+div.seperator {
+	display: inline-block ;
+	margin-left: 10px ;
+	margin-right: 10px ;
+}
+
+div.time {
+	display: inline-block ;
+}
+

@@ -1,0 +1,266 @@
+
+<header class="app-header">
+
+	<h1 class="app-header__title">
+		Incident Commander
+	</h1>
+
+	<div class="app-header__subtitle">
+
+		<span class="app-header__quote">
+			"{{ quote.excerpt }}"
+		</span>
+
+		<span class="app-header__author">
+			&mdash; {{ quote.author }}
+		</span>
+
+	</div>
+
+	<a (click)="startNewIncident()" class="app-header__start">Start New Incident</a>
+
+</header>
+
+<section class="control-panel">
+
+	<header class="section-header">
+
+		<h2 class="section-header__title">
+			Command Center
+		</h2>
+
+		<div class="section-header__attributes duration">
+			<span class="duration__label">
+				Duration:
+			</span>
+			<span class="duration__time">
+				{{ this.duration.hours }} Hours, {{ this.duration.minutes }} Minutes
+			</span>
+		</div>
+
+	</header>
+
+	<form class="form">
+
+		<div class="form__field">
+			<div class="form__field-label">
+				Description:
+			</div>
+			<div class="form__field-body">
+
+				<input type="text" name="description" [(ngModel)]="form.description" (ngModelChange)="applyForm()" autofocus class="large" />
+
+			</div>
+		</div>
+
+		<div class="form__field">
+			<div class="form__field-label">
+				Priority:
+			</div>
+			<div class="form__field-body form__field-body--select">
+
+				<select name="priority" [(ngModel)]="form.priorityID" (ngModelChange)="applyForm()">
+					<option *ngFor="let option of priorities" [ngValue]="option.id">
+						{{ option.id }} &mdash; {{ option.description }}
+					</option>
+				</select>
+
+			</div>
+		</div>
+
+		<div class="form__field">
+			<div class="form__field-label">
+				Started At:
+			</div>
+			<div class="form__field-body form__field-body--select">
+
+				<bn-date-time [(value)]="form.startedAt" (valueChange)="applyForm()"></bn-date-time>
+
+				<span class="local-time-note">
+					( Use your local time )
+				</span>
+
+			</div>
+		</div>
+
+		<div class="form__field">
+			<div class="form__field-label">
+				Video Link:
+			</div>
+			<div class="form__field-body">
+
+				<input type="text" name="videoLink" [(ngModel)]="form.videoLink" (ngModelChange)="applyForm()" class="large" />
+
+			</div>
+		</div>
+
+		<div class="form__field">
+			<div class="form__field-label">
+				Update:
+			</div>
+			<div class="form__field-body form__field-body--select add-update">
+
+				<select name="updateStatus" [(ngModel)]="form.updateStatusID" class="add-update__status">
+					<option *ngFor="let option of statuses" [ngValue]="option.id">
+						{{ option.id }}
+					</option>
+				</select>
+
+				<textarea
+					name="updateDescription"
+					[(ngModel)]="form.updateDescription"
+					(keydown.meta.Enter)="addUpdate()"
+					class="add-update__content">
+				</textarea>
+
+				<button type="button" (click)="addUpdate()" class="add-update__submit">
+					Add Update
+				</button>
+
+				<span class="add-update__submit-note">Or CMD+Enter</span>
+
+			</div>
+		</div>
+
+		<div class="form__field form__field--slack">
+			<div class="form__field-label">
+				For Slack:
+			</div>
+			<div class="form__field-body form__field-body--select slack">
+
+				<select name="slackSize" [(ngModel)]="form.slackSize" (ngModelChange)="applyForm()" class="slack__size">
+					<option [ngValue]="9999">Show All Updates</option>
+					<option [ngValue]="1">1 Update</option>
+					<option [ngValue]="3">3 Updates</option>
+					<option [ngValue]="5">5 Updates</option>
+					<option [ngValue]="8">8 Updates</option>
+					<option [ngValue]="13">13 Updates</option>
+				</select>
+
+				<select name="slackFormat" [(ngModel)]="form.slackFormat" (ngModelChange)="applyForm()" class="slack__format">
+					<option [ngValue]=" 'compact' ">Compact</option>
+					<option [ngValue]=" 'readable' ">Readable</option>
+				</select>
+
+				<textarea #slackRef [readonly]="true" [value]="form.slack" (click)="slackRef.select()" class="slack__content"></textarea>
+
+			</div>
+		</div>
+
+	</form>
+
+</section>
+
+<section *ngIf="incident.updates.length" class="previous-updates">
+
+	<header class="section-header">
+
+		<h2 class="section-header__title">
+			Previous Updates
+		</h2>
+
+	</header>
+
+	<!-- BEGIN: Edit Form. -->
+	<ng-template [ngIf]="editForm.update">
+
+		<form class="form">
+
+			<div class="form__field">
+				<div class="form__field-label">
+					Status:
+				</div>
+				<div class="form__field-body form__field-body--select">
+
+					<select name="updateStatus" [(ngModel)]="editForm.statusID" class="update__status">
+						<option *ngFor="let option of statuses" [ngValue]="option.id">
+							{{ option.id }}
+						</option>
+					</select>
+
+				</div>
+			</div>
+
+			<div class="form__field">
+				<div class="form__field-label">
+					Created At:
+				</div>
+				<div class="form__field-body form__field-body--select">
+
+					<bn-date-time [(value)]="editForm.createdAt" (valueChange)="applyForm()"></bn-date-time>
+
+					<span class="local-time-note">
+						( Use your local time )
+					</span>
+
+				</div>
+			</div>
+
+			<div class="form__field">
+				<div class="form__field-label">
+					Description:
+				</div>
+				<div class="form__field-body">
+
+					<textarea
+						name="updateDescription"
+						[(ngModel)]="editForm.description"
+						(keydown.meta.Enter)="saveUpdateChanges()"
+						class="">
+					</textarea>
+
+				</div>
+			</div>
+
+			<div class="form__actions">
+
+				<button type="button" (click)="saveUpdateChanges()" class="form__primary-action">
+					Save Changes
+				</button>
+
+				<a (click)="cancelEdit()" class="form__secondary-action">Cancel</a>
+
+			</div>
+
+		</form>
+
+	</ng-template>
+	<!-- END: Edit Form. -->
+
+
+	<!-- BEGIN: Timeline. -->
+	<ng-template [ngIf]="! editForm.update">
+
+		<div class="timeline">
+
+			<div *ngFor="let update of incident.updates" class="timeline__item">
+
+				<div class="timeline__createdAt">
+					<div class="timeline__time">
+						{{ update.createdAt | timelineTime }}
+					</div>
+					<div class="timeline__date">
+						{{ update.createdAt | timelineDate }}
+					</div>
+				</div>
+
+				<div class="timeline__description">
+					<span class="timeline__status">{{ update.status.id }}</span>
+					&mdash;
+					{{ update.description }}
+				</div>
+
+				<div class="timeline__actions">
+					<a (click)="editUpdate( update )" class="timeline__edit">edit</a>
+					<span class="timeline__separator">|</span>				
+					<a (click)="deleteUpdate( update )" class="timeline__delete">delete</a>
+				</div>
+
+			</div>
+
+		</div>
+
+	</ng-template>
+	<!-- END: Timeline. -->
+
+</section>
