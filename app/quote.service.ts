@@ -38,7 +38,7 @@ export class QuoteService {
 			},
 			{
 				author: "Sun Tzu",
-				excerpt: "One may know how to conquer without being able to do it. "
+				excerpt: "One may know how to conquer without being able to do it."
 			},
 			{
 				author: "Sun Tzu",
@@ -59,6 +59,22 @@ export class QuoteService {
 			{
 				author: "Sun Tzu",
 				excerpt: "Plan for what it is difficult while it is easy, do what is great while it is small."
+			},
+			{
+				author: "Sun Tzu",
+				excerpt: "So long as victory can be attained, stupid haste is preferable to clever dilatoriness."
+			},
+			{
+				author: "Sun Tzu",
+				excerpt: "The principle on which to manage an army is to set up one standard of courage which all must reach."
+			},
+			{
+				author: "Sun Tzu",
+				excerpt: "It is best to keep one's own state intact; to crush the enemy's state is only second best."
+			},
+			{
+				author: "Sun Tzu",
+				excerpt: "Ground on which we can only be saved from destruction by fighting without delay, is desperate ground."
 			}
 		];
 
