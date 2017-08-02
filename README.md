@@ -23,6 +23,9 @@ updates into a tightly-formatted Slack message that I can quickly copy-and-paste
 * **localStorage** - The current incident is stored in the browser's `localStorage` API.
   This way, if you refresh the page, or close your browser, re-opening the application 
   will automatically bring up the data from the current / most recent incident.
+* **Import / Export** - In order to facilitate incident hand-offs while still using 
+  `localStorage`, there is a simple import / export feature that allows a JSON version of
+  the incident controls to be [manually] passed-off to another engineer.
 * **Local Timezone** - The `#Incident` channel has to be updated using the EST timezone.
   Which is difficult for the majority of people who are not on the east coast. In this 
   app, you can use your local timezone and the generated Slack message will automatically
