@@ -17,7 +17,10 @@
 
 	</div>
 
-	<a (click)="startNewIncident()" class="app-header__start">Start New Incident</a>
+	<div class="app-header__tools incident-io">
+		<a (click)="startNewIncident()" class="incident-io__start">Start New Incident</a>
+		<a (click)="exportIncident()" class="incident-io__export">Import / Export</a>
+	</div>
 
 </header>
 
@@ -252,7 +255,7 @@
 
 				<div class="timeline__actions">
 					<a (click)="editUpdate( update )" class="timeline__edit">edit</a>
-					<span class="timeline__separator">|</span>				
+					<span class="timeline__separator">|</span>
 					<a (click)="deleteUpdate( update )" class="timeline__delete">delete</a>
 				</div>
 
@@ -263,4 +266,26 @@
 	</ng-template>
 	<!-- END: Timeline. -->
 
+</section>
+
+<section *ngIf="isShowingIoModal" class="io-modal">
+	<div class="io-modal__content">
+
+		<header class="io-modal__header">
+
+			<h2 class="io-modal__title">
+				Incident Import &amp; Export 
+			</h2>
+
+			<a (click)="closeExportIncident()" class="io-modal__close">Close</a>
+
+		</header>
+
+		<textarea #ioRef name="payload" [(ngModel)]="ioForm.payload" (focus)="ioRef.select()" class="io-modal__payload"></textarea>
+
+		<div class="io-modal__actions">
+			<a (click)="importIncident()" class="io-modal__import">Import Incident</a>
+		</div>
+
+	</div>
 </section>

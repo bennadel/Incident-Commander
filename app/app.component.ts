@@ -42,7 +42,11 @@ export class AppComponent {
 		slackFormat: string;
 		slack: string;
 	};
+	public ioForm: {
+		payload: string;
+	};
 	public incident: Incident;
+	public isShowingIoModal: boolean;
 	public priorities: Priority[];
 	public quote: Quote;
 	public statuses: Status[];
@@ -87,6 +91,11 @@ export class AppComponent {
 			createdAt: null,
 			description: null
 		};
+
+		this.ioForm = {
+			payload: null
+		};
+		this.isShowingIoModal = false;
 
 		this.duration = {
 			hours: 0,
@@ -161,6 +170,14 @@ export class AppComponent {
 	}
 
 
+	// I close the export / import incident window.
+	public closeExportIncident() : void {
+
+		this.isShowingIoModal = false;
+
+	}
+
+
 	// I delete the given update.
 	public deleteUpdate( update: Update ) : void {
 
@@ -186,6 +203,47 @@ export class AppComponent {
 		this.editForm.createdAt = update.createdAt;
 		this.editForm.description = update.description;
 
+	}
+
+
+	// I open the import / export window and prepare the current incident for export.
+	public exportIncident() : void {
+
+		this.ioForm.payload = this.incidentService.prepareForExport( this.incident );
+		this.isShowingIoModal = true;
+
+	}
+
+
+	// I import the raw incident payload, overwriting the current incident.
+	public importIncident() : void {
+
+		try {
+
+			this.incident = this.incidentService.prepareForImport( this.ioForm.payload );
+			this.incidentService.saveIncident( this.incident );
+
+		} catch ( error ) {
+
+			alert( "Import payload could not be parsed as JSON." );
+			return;
+
+		}
+
+		this.form.description = this.incident.description;
+		this.form.priorityID = this.incident.priority.id;
+		this.form.startedAt = this.incident.startedAt;
+		this.form.videoLink = this.incident.videoLink;
+		this.form.slack = this.slackSerializer.serialize( this.incident, this.form.slackSize, this.form.slackFormat );
+
+		this.updateDuration();
+		
+		this.isShowingIoModal = false;
+
+	}
+
+	public logit() : void {
+		console.log( "here" );
 	}
 
 

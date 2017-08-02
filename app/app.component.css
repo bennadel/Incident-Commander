@@ -10,8 +10,8 @@
 	width: 1200px ;
 }
 
-:host >>> a {
-	color: red ;
+a {
+	color: inherit ;
 	cursor: pointer ;
 	text-decoration: underline ;
 	user-select: none ;
@@ -81,25 +81,39 @@ textarea {
 	text-align: right ;
 }
 
-.app-header__start {
+.app-header__tools {
+	position: absolute ;
+	right: 0px ;
+	top: 3px ;
+}
+
+.incident-io {}
+
+.incident-io__start {
 	background-color: #FF2E63 ;
 	border-radius: 30px 30px 30px 30px ;
 	color: #FFFFFF ;
 	cursor: pointer ;
+	display: block ;
 	font-size: 12px ;
 	font-weight: 400 ;
 	height: 37px ;
 	line-height: 37px ;
 	padding: 0px 30px 0px 30px ;
-	position: absolute ;
-	right: 0px ;
 	text-decoration: none ;
 	text-transform: uppercase ;
-	top: 3px ;
 }
 
-.app-header__start:hover {
+.incident-io__start:hover {
 	background-color: #F71953 ;
+}
+
+.incident-io__export {
+	color: #999999 ;
+	display: block ;
+	font-size: 14px ;
+	margin-top: 12px ;
+	text-align: center ;
 }
 
 .section-header {
@@ -290,4 +304,73 @@ span.local-time-note {
 .timeline__separator {
 	display: inline-block ;
 	margin: 0px 5px 0px 5px ;
+}
+
+.io-modal {
+	background-color: rgba( 255, 255, 255, 0.95 ) ;
+	bottom: 0px ;
+	left: 0px ;
+	position: fixed ;
+	right: 0px ;
+	top: 0px ;
+	z-index: 1000 ;
+}
+
+.io-modal__content {
+	left: 50% ;
+	margin-left: -450px ;
+	position: absolute ;
+	top: 50px ;
+	width: 900px ;
+}
+
+.io-modal__header {
+	margin-bottom: 20px ;
+	position: relative ;
+}
+
+.io-modal__title {
+	font-size: 22px ;
+	font-weight: 600 ;
+	line-height: 27px ;
+	margin: 0px 0px 0px 0px ;
+}
+
+.io-modal__close {
+	font-size: 16px ;
+	font-weight: 400 ;
+	line-height: 27px ;
+	position: absolute ;
+	top: 0px ;
+	right: 0px ;
+}
+
+.io-modal__payload {
+	box-sizing: border-box ;
+	border: 4px solid #CCCCCC ;
+	display: block ;
+	height: 300px ;
+	padding: 10px 10px 10px 10px ;
+	width: 100% ;
+}
+
+.io-modal__actions {
+	margin-top: 25px ;
+}
+
+.io-modal__import {
+	background-color: #2386DB ;
+	border-radius: 5px 5px 5px 5px ;
+	color: #FFFFFF ;
+	display: block ;
+	font-size: 18px ;
+	font-weight: 400 ;
+	line-height: 60px ;
+	text-decoration: none ;
+	text-transform: uppercase ;
+	text-align: center ;
+}
+
+.io-modal__import:hover {
+	background-color: #196BB2 ;
 }

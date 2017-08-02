@@ -138,6 +138,28 @@ export class IncidentService {
 	}
 
 
+	// I serialize the given incident in a way that prepares it for export.
+	public prepareForExport( incident: Incident ) : string {
+
+		return( JSON.stringify( incident, null, "\t" ) );
+
+	}
+
+
+	// I deserialize the given export-payload into an Incident that can be imported 
+	// into the application.
+	public prepareForImport( payload: string ) : Incident {
+
+		var incident: Incident = JSON.parse( payload, this.jsonReviver );
+
+		// TODO: Add validation to make sure that the payload actually contains
+		// incident-relevant data.
+
+		return( incident );
+
+	}
+
+
 	// I persist the given incident.
 	public saveIncident( incident: Incident ) : void {
 
