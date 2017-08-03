@@ -3,9 +3,10 @@
 import { ChangeDetectionStrategy } from "@angular/core";
 import { Component } from "@angular/core";
 import { EventEmitter } from "@angular/core";
-import find = require( "lodash/find" );
-import range = require( "lodash/range" );
 import { SimpleChanges } from "@angular/core";
+
+// Import the application services.
+import { _ } from "./lodash-extended";
 
 interface DateOption {
 	id: number;
@@ -160,11 +161,11 @@ export class DateTimeComponent {
 			// we won't be able to properly render the form.
 			this.yearOptions = this.fromRange( ( this.value.getFullYear() - 1 ), ( this.value.getFullYear() + 1 ) );
 
-			this.form.year = find( this.yearOptions, [ "id", this.value.getFullYear() ] );
-			this.form.month = find( this.monthOptions, [ "id", this.value.getMonth() ] );
-			this.form.day = find( this.dayOptions, [ "id", this.value.getDate() ] );
-			this.form.hour = find( this.hourOptions, [ "id", this.value.getHours() ] );
-			this.form.minute = find( this.minuteOptions, [ "id", this.value.getMinutes() ] );
+			this.form.year = _.find( this.yearOptions, [ "id", this.value.getFullYear() ] );
+			this.form.month = _.find( this.monthOptions, [ "id", this.value.getMonth() ] );
+			this.form.day = _.find( this.dayOptions, [ "id", this.value.getDate() ] );
+			this.form.hour = _.find( this.hourOptions, [ "id", this.value.getHours() ] );
+			this.form.minute = _.find( this.minuteOptions, [ "id", this.value.getMinutes() ] );
 
 		} else {
 
@@ -187,7 +188,7 @@ export class DateTimeComponent {
 	// I get the date options based on the given range.
 	private fromRange( start: number, end: number ) : DateOption[] {
 
-		var options = range( start, ( end + 1 ) /* exclusive. */ ).map(
+		var options = _.range( start, ( end + 1 ) /* exclusive. */ ).map(
 			( value: number ) : DateOption => {
 
 				return({
@@ -206,7 +207,7 @@ export class DateTimeComponent {
 	// I get the hour options, id starts at 0.
 	private getHourOptions() : DateOption[] {
 
-		var options = range( 0, 24 /* exclusive. */ ).map(
+		var options = _.range( 0, 24 /* exclusive. */ ).map(
 			( value: number ) : DateOption => {
 
 				var description = ( ( value % 12 ) || 12 ).toString();

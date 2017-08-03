@@ -1,6 +1,6 @@
 
 // Import the core angular services.
-import random = require( "lodash/random" );
+import { _ } from "./lodash-extended";
 
 export interface Quote {
 	author: string;
@@ -89,7 +89,7 @@ export class QuoteService {
 	// I return a random quote.
 	public getRandomQuote() : Quote {
 
-		var index = random( 0, ( this.quotes.length - 1 ) );
+		var index = _.random( 0, ( this.quotes.length - 1 ) );
 
 		return( this.quotes[ index ] );
 

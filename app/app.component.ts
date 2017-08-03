@@ -1,8 +1,6 @@
 
 // Import the core angular services.
 import { Component } from "@angular/core";
-import find = require( "lodash/find" );
-import without = require( "lodash/without" );
 
 // Import the application services.
 import { Incident } from "./incident.service";
@@ -13,6 +11,7 @@ import { QuoteService } from "./quote.service";
 import { SlackSerializer } from "./slack-serializer";
 import { Status } from "./incident.service";
 import { Update } from "./incident.service";
+import { _ } from "./lodash-extended";
 
 @Component({
 	selector: "my-app",
@@ -124,7 +123,7 @@ export class AppComponent {
 
 		var update = {
 			id: Date.now(),
-			status: find( this.statuses, [ "id", this.form.updateStatusID ] ),
+			status: _.find( this.statuses, [ "id", this.form.updateStatusID ] ),
 			createdAt: new Date(),
 			description: this.form.updateDescription
 		};
@@ -150,7 +149,7 @@ export class AppComponent {
 	public applyForm() : void {
 
 		this.incident.description = this.form.description;
-		this.incident.priority = find( this.priorities, [ "id", this.form.priorityID ] );
+		this.incident.priority = _.find( this.priorities, [ "id", this.form.priorityID ] );
 		this.incident.startedAt = this.form.startedAt;
 		this.incident.videoLink = this.form.videoLink;
 		this.incidentService.saveIncident( this.incident );
@@ -187,7 +186,7 @@ export class AppComponent {
 
 		}
 
-		this.incident.updates = without( this.incident.updates, update );
+		this.incident.updates = _.without( this.incident.updates, update );
 		this.incidentService.saveIncident( this.incident );
 
 		this.form.slack = this.slackSerializer.serialize( this.incident, this.form.slackSize, this.form.slackFormat );
@@ -253,7 +252,7 @@ export class AppComponent {
 		var update = this.editForm.update;
 
 		// Update the update item.
-		update.status = find( this.statuses, [ "id", this.editForm.statusID ] );
+		update.status = _.find( this.statuses, [ "id", this.editForm.statusID ] );
 		update.createdAt = this.editForm.createdAt;
 		update.description = this.editForm.description;
 
