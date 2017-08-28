@@ -92,26 +92,13 @@ export class DateTimeComponent {
 			);
 
 			// If the month is an unexpected value, it means the year / month / date 
-			// combination is not value. Set the date to zero in order to rollback to
+			// combination is not valid. Set the date to zero in order to rollback to
 			// the previous month.
 			if ( selectedDate.getMonth() !== this.form.month.id ) {
 
 				selectedDate.setDate( 0 ); // Rolls back to last day of previous month.
 
 			}
-
-			// Because this component uses one-way data binding, we can't really keep 
-			// the form rendered with the selected values because we don't know if the 
-			// calling context is going to want to keep that value. And, if it doesn't,
-			// we'll have no way of knowing because the incoming value won't trigger any
-			// change event. As such, we have to reset the form values and then wait for
-			// an input change event to re-render them.
-			this.value = null;
-			this.form.year = null;
-			this.form.month = null;
-			this.form.day = null;
-			this.form.hour = null;
-			this.form.minute = null;
 
 			this.valueChange.emit( selectedDate );
 
@@ -122,6 +109,18 @@ export class DateTimeComponent {
 			this.valueChange.emit( null );
 
 		}
+
+		// HACK: Because the calling context may not react to the emitted date, we need
+		// to use a setTimeout() to trigger an additional change-detection in order to
+		// ensure that the local select inputs are updated to reflect the bound value.
+		setTimeout(
+			() : void => {
+
+				this.applyValue();
+				
+			},
+			10
+		);
 
 	}
 
@@ -155,6 +154,19 @@ export class DateTimeComponent {
 
 		}
 
+		this.applyValue();
+
+	}
+
+
+	// ---
+	// PRIVATE METHODS.
+	// ---
+
+
+	// I update the form values based on the bound value.
+	private applyValue() : void {
+
 		if ( this.value ) {
 
 			// Rebuild the year options based on the input. If the input is out of range,
@@ -175,14 +187,9 @@ export class DateTimeComponent {
 			this.form.hour = null;
 			this.form.minute = null;
 
-		}		
+		}
 
 	}
-
-
-	// ---
-	// PRIVATE METHODS.
-	// ---
 
 
 	// I get the date options based on the given range.
@@ -191,9 +198,14 @@ export class DateTimeComponent {
 		var options = _.range( start, ( end + 1 ) /* exclusive. */ ).map(
 			( value: number ) : DateOption => {
 
+				var description = ( value < 10 )
+					? ( "0" + value )
+					: value.toString()
+				;
+
 				return({
 					id: value,
-					description: ( "0" + value.toString() ).slice( -2 )
+					description: description
 				});
 
 			}

@@ -2,11 +2,16 @@
 // Import the core angular services.
 import { BrowserModule } from "@angular/platform-browser";
 import { FormsModule } from "@angular/forms";
+import { HashLocationStrategy } from "@angular/common";
+import { Location } from "@angular/common";
+import { LocationStrategy } from "@angular/common";
 import { NgModule } from "@angular/core";
+import { Title } from "@angular/platform-browser";
 
 // Import the application components and services.
 import { AppComponent } from "./app.component";
 import { DateTimeComponent } from "./date-time.component";
+import { IncidentGateway } from "./incident.gateway";
 import { IncidentService } from "./incident.service";
 import { QuoteService } from "./quote.service";
 import { SlackSerializer } from "./slack-serializer";
@@ -23,6 +28,16 @@ import { TimelineTimePipe } from "./timeline-time.pipe";
 		TimelineTimePipe
 	],
 	providers: [
+		// Core providers.
+		Location,
+		{
+			provide: LocationStrategy,
+			useClass: HashLocationStrategy
+		},
+		Title,
+
+		// Application providers.
+		IncidentGateway,
 		IncidentService,
 		QuoteService,
 		SlackSerializer

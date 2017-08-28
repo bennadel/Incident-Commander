@@ -1,4 +1,13 @@
 
+// Import the core angular services.
+import { Injectable } from "@angular/core";
+
+// Import the application components and services.
+import { IncidentDTO } from "./incident.gateway";
+import { IncidentGateway } from "./incident.gateway";
+import { UpdateDTO } from "./incident.gateway";
+import { _ } from "./lodash-extended";
+
 export interface Status {
 	id: string;
 	description: string;
@@ -17,6 +26,7 @@ export interface Update {
 }
 
 export interface Incident {
+	id?: string;
 	name: string;
 	description: string;
 	priority: Priority;
@@ -26,15 +36,16 @@ export interface Incident {
 	updates: Update[];
 }
 
+@Injectable()
 export class IncidentService {
 
-	private localStorageKey: string;
+	private incidentGateway: IncidentGateway;
 
 
 	// I initialize the incident services.
-	constructor() {
+	constructor( incidentGateway: IncidentGateway ) {
 
-		this.localStorageKey = "incident-commander";
+		this.incidentGateway = incidentGateway;
 
 	}
 
@@ -44,24 +55,21 @@ export class IncidentService {
 	// ---
 
 
-	// I return a new incident object (not persisted).
-	public getNewIncident() : Incident {
+	// I return the incident with the given ID. Returns a Promise.
+	public getIncident( id: string ) : Promise<Incident> {
 
-		var priorities = this.getPriorities();
-		var statuses = this.getStatuses();
-		var name = this.getNewName();
+		var promise = this.incidentGateway
+			.readIncident( id )
+			.then(
+				( dto: IncidentDTO ) : Incident => {
 
-		var incident: Incident = {
-			name: name,
-			description: "",
-			priority: priorities[ 0 ],
-			status: statuses[ 0 ],
-			startedAt: new Date(),
-			videoLink: `https://hangouts.google.com/hangouts/_/invisionapp.com/${ name }`,
-			updates: []
-		}
+					return( this.fromTransferObject( dto ) );
 
-		return( incident );
+				}
+			)
+		;
+
+		return( promise );
 
 	}
 
@@ -95,24 +103,6 @@ export class IncidentService {
 	}
 
 
-	// I return the most recently persisted incident (or null).
-	public getRecentIncident() : Incident {
-
-		var persistedIncident = localStorage.getItem( this.localStorageKey );
-
-		if ( ! persistedIncident ) {
-
-			return( null );
-
-		}
-
-		var incident: Incident = JSON.parse( persistedIncident, this.jsonReviver );
-
-		return( incident );
-
-	}
-
-
 	// I return the incident statuses.
 	public getStatuses() : Status[] {
 
@@ -138,32 +128,59 @@ export class IncidentService {
 	}
 
 
-	// I serialize the given incident in a way that prepares it for export.
-	public prepareForExport( incident: Incident ) : string {
-
-		return( JSON.stringify( incident, null, "\t" ) );
-
-	}
-
-
-	// I deserialize the given export-payload into an Incident that can be imported 
-	// into the application.
-	public prepareForImport( payload: string ) : Incident {
-
-		var incident: Incident = JSON.parse( payload, this.jsonReviver );
-
-		// TODO: Add validation to make sure that the payload actually contains
-		// incident-relevant data.
-
-		return( incident );
-
-	}
-
-
 	// I persist the given incident.
-	public saveIncident( incident: Incident ) : void {
+	public saveIncident( incident: Incident ) : Promise<void> {
 
-		localStorage.setItem( this.localStorageKey, JSON.stringify( incident ) );
+		if ( ! incident.id ) {
+
+			throw( new Error( "IC.MissingID" ) );
+
+		}
+
+		var dto = this.toTransferObject( incident );
+		var promise = this.incidentGateway.updateIncident( dto );
+
+		return( promise );
+
+	}
+
+
+	// I start a new incident, persist it, and return it. Returns a Promise.
+	public startNewIncident() : Promise<Incident> {
+
+		var priorities = this.getPriorities();
+		var statuses = this.getStatuses();
+		var name = this.getNewName();
+
+		var incident: Incident = {
+			name: name,
+			description: "",
+			priority: priorities[ 0 ],
+			status: statuses[ 0 ],
+			startedAt: new Date(),
+			videoLink: `https://hangouts.google.com/hangouts/_/invisionapp.com/${ name }`,
+			updates: []
+		}
+
+		var dto = this.toTransferObject( incident );
+
+		var promise = this.incidentGateway
+			.createIncident( dto )
+			.then(
+				( id: string ) : Incident => {
+
+					// Behind the scenes, the gateway will merge an auto-generated ID 
+					// into the remote object. In order to mimic that structure, let's 
+					// save the ID back into the new incident object.
+					incident.id = id;
+
+					return( incident );
+
+				}
+			)
+		;
+
+		return( promise );
 
 	}
 
@@ -171,6 +188,40 @@ export class IncidentService {
 	// ---
 	// PRIVATE METHODS.
 	// ---
+
+
+	// I create a new incident from the given data transfer object. The DTO is the 
+	// structure used by the incident gateway.
+	private fromTransferObject( dto: IncidentDTO ) : Incident {
+
+		var priorities = this.getPriorities();
+		var statuses = this.getStatuses();
+
+		var incident = {
+			id: dto.id,
+			name: dto.name,
+			description: dto.description,
+			priority: _.find( priorities, [ "id", dto.priorityID ] ),
+			status: _.find( statuses, [ "id", dto.statusID ] ),
+			startedAt: new Date( dto.startedAt ),
+			videoLink: dto.videoLink,
+			updates: dto.updates.map(
+				( update: UpdateDTO ) : Update => {
+
+					return({
+						id: update.id,
+						status: _.find( statuses, [ "id", update.statusID ] ),
+						createdAt: new Date( update.createdAt ),
+						description: update.description
+					});
+
+				}
+			)
+		};
+
+		return( incident );
+
+	}
 
 
 	// I generate a new name for an incident.
@@ -181,25 +232,34 @@ export class IncidentService {
 	}
 
 
-	// I provide a JSON reviver that will re-hydrate Date objects.
-	// --
-	// CAUTION: This is going to be passed by-reference into JSON.parse(). As such, the
-	// "this" context will not be expected in this function body.
-	private jsonReviver( key: string, value: any ) : any {
+	// I create a data transfer object (DTO) from the given incident. The DTO is the 
+	// structure used by the incident gateway.
+	private toTransferObject( incident: Incident ) : IncidentDTO {
 
-		// Dates are serialized in TZ format, example: '1981-12-20T04:00:14.000Z'.
-		var datePattern = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/;
+		var dto = {
+			id: incident.id,
+			name: incident.name,
+			description: incident.description,
+			priorityID: incident.priority.id,
+			statusID: incident.status.id,
+			startedAt: incident.startedAt.getTime(),
+			videoLink: incident.videoLink,
+			updates: incident.updates.map(
+				( update: Update ) : UpdateDTO => {
 
-		if ( ( typeof( value ) === "string" ) && datePattern.test( value ) ) {
+					return({
+						id: update.id,
+						statusID: update.status.id,
+						createdAt: update.createdAt.getTime(),
+						description: update.description
+					});
 
-			return( new Date( value ) );
+				}
+			)
+		};
 
-		}
-
-		// If it's not a date-string, we want to return the value as-is. If we fail to 
-		// return a value, it will be omitted from the resultant data structure.
-		return( value );
+		return( dto );
 
 	}
-	
+
 }
