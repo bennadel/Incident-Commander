@@ -17,11 +17,18 @@ export class SlackSerializer {
 			`*Start of Customer Impact*: ${ this.formatTimeInEST( incident.startedAt ) }`,
 			`*Zoom or Hangout link*: \`${ incident.videoLink }\` `,
 			`*Status*: ${ incident.status.id }`,
-			`*Timeline*:`,
-			"" // Will add a new line when combined.
+			`*Timeline*: \`https://bennadel.github.io/Incident-Commander/#${ incident.id }\` `
 		];
 
 		var visibleUpdates = incident.updates.slice( -updateLimit );
+
+		// If there are updates to show, add a spacer between the heads-up data and the
+		// actual timeline items.
+		if ( visibleUpdates.length ) {
+
+			parts.push( "" );
+
+		}
 
 		// If not all updates are visible, add an indication as to how many are hidden.
 		if ( visibleUpdates.length !== incident.updates.length ) {

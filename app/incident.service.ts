@@ -1,6 +1,10 @@
 
 // Import the core angular services.
 import { Injectable } from "@angular/core";
+import { Observable } from "rxjs/Observable";
+
+// Import these modules for their side-effects.
+import "rxjs/add/operator/map";
 
 // Import the application components and services.
 import { IncidentDTO } from "./incident.gateway";
@@ -70,6 +74,29 @@ export class IncidentService {
 		;
 
 		return( promise );
+
+	}
+
+
+	// I return the incident, with the given ID, as an observable stream. The returned
+	// stream will emit the incident object any time that it changes (including the 
+	// initial load of the incident).
+	public getIncidentAsStream( id: string ) : Observable<Incident> {
+
+		// The incident gateway is going to be emitting data transfer objects. As such,
+		// we need to map the DTOs into actual Incident objects.
+		var stream = this.incidentGateway
+			.readIncidentAsStream( id )
+			.map(
+				( dto: IncidentDTO ) : Incident => {
+
+					return( this.fromTransferObject( dto ) );
+
+				}
+			)
+		;
+
+		return( stream );
 
 	}
 
@@ -153,6 +180,7 @@ export class IncidentService {
 		var name = this.getNewName();
 
 		var incident: Incident = {
+			id: null, // This will be defined as part of the gateway operation.
 			name: name,
 			description: "",
 			priority: priorities[ 0 ],
@@ -171,7 +199,8 @@ export class IncidentService {
 
 					// Behind the scenes, the gateway will merge an auto-generated ID 
 					// into the remote object. In order to mimic that structure, let's 
-					// save the ID back into the new incident object.
+					// save the ID back into the new incident object locally before we
+					// return it.
 					incident.id = id;
 
 					return( incident );

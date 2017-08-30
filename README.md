@@ -20,12 +20,12 @@ updates into a tightly-formatted Slack message that I can quickly copy-and-paste
 
 ## Features
 
-* **localStorage** - The current incident is stored in the browser's `localStorage` API.
-  This way, if you refresh the page, or close your browser, re-opening the application 
-  will automatically bring up the data from the current / most recent incident.
-* **Import / Export** - In order to facilitate incident hand-offs while still using 
-  `localStorage`, there is a simple import / export feature that allows a JSON version of
-  the incident controls to be [manually] passed-off to another engineer.
+* **Firebase** - The current incident is stored both locally and remotely using the 
+  [Firebase][firebase] Backend-as-a-Service (Baas) library. This is a **public
+  database**, which means you shouldn't store _overly-sensitive_ information in your 
+  incident. However, the URLs for the individual incidents are extremely hard to guess.
+  The benefit of using Firebase is that you can copy-and-paste an Incident URL to another
+  teammate who can take-over as the Incident Commander.
 * **Local Timezone** - The `#Incident` channel has to be updated using the EST timezone.
   Which is difficult for the majority of people who are not on the east coast. In this 
   app, you can use your local timezone and the generated Slack message will automatically
@@ -41,3 +41,4 @@ updates into a tightly-formatted Slack message that I can quickly copy-and-paste
 [googleplus]: https://plus.google.com/108976367067760160494?rel=author
 [invisionapp]: https://www.bennadel.com/invision/co-founder.htm
 [app]: https://bennadel.github.io/Incident-Commander/
+[firebase]: https://firebase.google.com/

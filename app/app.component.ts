@@ -4,6 +4,7 @@ import { Component } from "@angular/core";
 import { Location } from "@angular/common";
 import { OnInit } from "@angular/core";
 import { PopStateEvent } from "@angular/common";
+import { Subscription } from "rxjs/Subscription";
 import { Title } from "@angular/platform-browser";
 
 // Import the application services.
@@ -57,6 +58,7 @@ export class AppComponent implements OnInit {
 	private location: Location;
 	private quoteService: QuoteService;
 	private slackSerializer: SlackSerializer;
+	private subscription: Subscription;
 	private title: Title;
 
 
@@ -80,6 +82,7 @@ export class AppComponent implements OnInit {
 		this.statuses = this.incidentService.getStatuses();
 		this.incident = null;
 		this.incidentID = null;
+		this.subscription = null;
 
 		this.form = {
 			description: "",
@@ -132,19 +135,24 @@ export class AppComponent implements OnInit {
 			description: this.form.updateDescription
 		};
 
+		// Optimistically apply the changes to the local incident.
+		// --
 		// Automatically apply the status of the new update to the overall status of 
 		// the incident (assuming that statuses generally move "forward" as updates are
 		// recorded).
 		this.incident.status = update.status;
 		this.incident.updates.push( update );
 		this.incident.updates.sort( this.sortCreatedAtDesc );
-		this.incidentService.saveIncident( this.incident );
+
+		// Optimistically update the Slack message formatting.
+		this.form.slack = this.slackSerializer.serialize( this.incident, this.form.slackSize, this.form.slackFormat );
 
 		// Reset the content, but leave the status selection - it will likely be used by
 		// the subsequent updates.
 		this.form.updateDescription = "";
 
-		this.form.slack = this.slackSerializer.serialize( this.incident, this.form.slackSize, this.form.slackFormat );
+		// Finally, persist the incident changes.
+		this.incidentService.saveIncident( this.incident );
 
 	}
 
@@ -156,16 +164,20 @@ export class AppComponent implements OnInit {
 		// known value in the incident - we don't want any of the dates to be null.
 		this.form.startedAt = ( this.form.startedAt || this.incident.startedAt );
 
+		// Optimistically apply the changes to the local incident.
 		this.incident.description = this.form.description;
 		this.incident.priority = _.find( this.priorities, [ "id", this.form.priorityID ] );
 		this.incident.startedAt = this.form.startedAt;
 		this.incident.videoLink = this.form.videoLink;
-		this.incidentService.saveIncident( this.incident );
+
+		// Optimistically update the Slack message formatting.
+		this.form.slack = this.slackSerializer.serialize( this.incident, this.form.slackSize, this.form.slackFormat );
 
 		this.updateDuration();
 		this.updateTitle();
 
-		this.form.slack = this.slackSerializer.serialize( this.incident, this.form.slackSize, this.form.slackFormat );
+		// Finally, persist the incident changes.
+		this.incidentService.saveIncident( this.incident );
 
 	}
 
@@ -187,10 +199,14 @@ export class AppComponent implements OnInit {
 
 		}
 
+		// Optimistically apply the changes to the local incident.
 		this.incident.updates = _.without( this.incident.updates, update );
-		this.incidentService.saveIncident( this.incident );
 
+		// Optimistically update the Slack message formatting.
 		this.form.slack = this.slackSerializer.serialize( this.incident, this.form.slackSize, this.form.slackFormat );
+
+		// Finally, persist the incident changes.
+		this.incidentService.saveIncident( this.incident );
 		
 	}
 
@@ -239,23 +255,25 @@ export class AppComponent implements OnInit {
 
 		var update = this.editForm.update;
 
-		// Update the update item.
-		update.status = _.find( this.statuses, [ "id", this.editForm.statusID ] );
-		update.description = this.editForm.description;
-
 		// Since the createdAt date is required for proper rendering and sorting of the
 		// updates collection, we're only going to copy it back to the update if it is 
 		// valid (otherwise fall-back to the existing date).
-		update.createdAt = ( this.editForm.createdAt || update.createdAt );
+		this.editForm.createdAt = ( this.editForm.createdAt || update.createdAt );
 
-		// Since the date of the update may have changed, re-sort the updates.
+		// Optimistically update the incident locally.
+		update.status = _.find( this.statuses, [ "id", this.editForm.statusID ] );
+		update.description = this.editForm.description;
+		update.createdAt = this.editForm.createdAt;
 		this.incident.updates.sort( this.sortCreatedAtDesc );
-		this.incidentService.saveIncident( this.incident );
 
-		this.editForm.update = null;
-		
+		// Optimistically update the Slack message formatting.
 		this.form.slack = this.slackSerializer.serialize( this.incident, this.form.slackSize, this.form.slackFormat );
 
+		this.editForm.update = null;
+
+		// Finally, persist the incident changes.
+		this.incidentService.saveIncident( this.incident );
+		
 	}
 
 
@@ -267,6 +285,14 @@ export class AppComponent implements OnInit {
 		if ( this.incidentID && ! confirm( "Start a new incident (and clear the current incident data)?" ) ) {
 
 			return;
+
+		}
+
+		// If we're currently subscribed to a different incident, unsubscribe.
+		if ( this.subscription ) {
+
+			this.subscription.unsubscribe();
+			this.subscription = null;
 
 		}
 
@@ -303,6 +329,7 @@ export class AppComponent implements OnInit {
 					
 					this.updateDuration();
 					this.updateTitle();
+					this.updateSubscription();
 
 					// Update the location so that this URL can now be copy-and-pasted
 					// to other incident commanders.
@@ -334,6 +361,14 @@ export class AppComponent implements OnInit {
 
 		}
 
+		// If we're currently subscribed to a different incident, unsubscribe.
+		if ( this.subscription ) {
+
+			this.subscription.unsubscribe();
+			this.subscription = null;
+
+		}
+
 		this.incidentID = path;
 		this.incident = null;
 
@@ -360,6 +395,7 @@ export class AppComponent implements OnInit {
 					
 					this.updateDuration();
 					this.updateTitle();
+					this.updateSubscription();
 
 					// Update the location so that this URL can now be copy-and-pasted
 					// to other incident commanders.
@@ -453,6 +489,44 @@ export class AppComponent implements OnInit {
 	}
 
 
+	// I update the incident subscription so it points to the currently-selected 
+	// incident.
+	// --
+	// CAUTION: The subscription will trigger for BOTH local AND remote changes.
+	private updateSubscription() : void {
+
+		this.subscription = this.incidentService
+			.getIncidentAsStream( this.incidentID )
+			.subscribe(
+				( incident: Incident ) : void => {
+
+					this.incident = incident;
+
+					// Move the new incident data into the form.
+					this.form.description = this.incident.description;
+					this.form.priorityID = this.incident.priority.id;
+					this.form.startedAt = this.incident.startedAt;
+					this.form.videoLink = this.incident.videoLink;
+					this.form.slack = this.slackSerializer.serialize( this.incident, this.form.slackSize, this.form.slackFormat );
+
+					this.updateDuration();
+					this.updateTitle();
+
+				},
+				( error: any ) : void => {
+
+					// This shouldn't really ever happen unless the incident is actually
+					// deleted while in use.
+					console.log( "Incident Stream Failed" );
+					console.error( error );
+
+				}
+			)
+		;
+
+	}
+
+
 	// I update the window title based on the current incident start date.
 	private updateTitle() : void {
 
@@ -466,13 +540,10 @@ export class AppComponent implements OnInit {
 			: "PM"
 		;
 
-		// Ensure that we have two digits for all smaller fields.
-		monthValue = ( "0" + monthValue ).slice( -2 );
-		dayValue = ( "0" + dayValue ).slice( -2 );
-		hourValue = ( "0" + hourValue ).slice( -2 );
+		// Ensure that we have two digits for some of the smaller fields.
 		minuteValue = ( "0" + minuteValue ).slice( -2 );
 
-		this.title.setTitle( `${ yearValue }/${ monthValue }/${ dayValue } @ ${ hourValue }:${ minuteValue } ${ periodValue } - Incident Commander` );
+		this.title.setTitle( `Incident: ${ yearValue }/${ monthValue }/${ dayValue } at ${ hourValue }:${ minuteValue } ${ periodValue }` );
 
 	}
 
