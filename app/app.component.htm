@@ -195,6 +195,12 @@
 							<option [ngValue]=" 'readable' ">Readable</option>
 						</select>
 
+						<select name="slackTimezone" [(ngModel)]="form.slackTimezone" (ngModelChange)="applyForm()" class="slack__timezone">
+							<option *ngFor="let option of timezones" [ngValue]="option">
+								{{ option.abbreviation }} - {{ option.name }} ( {{ option.utc }} )
+							</option>
+						</select>
+
 						<textarea #slackRef [readonly]="true" [value]="form.slack" (click)="slackRef.select()" class="slack__content"></textarea>
 
 					</div>

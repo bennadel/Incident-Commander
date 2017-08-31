@@ -286,6 +286,10 @@ span.local-time-note {
 
 .slack__format {}
 
+.slack__timezone {
+	width: 500px ;
+}
+
 .slack__content {
 	display: block ;
 	height: 200px ;

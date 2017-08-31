@@ -10,6 +10,7 @@ import { Title } from "@angular/platform-browser";
 
 // Import the application components and services.
 import { AppComponent } from "./app.component";
+import { CacheService } from "./cache.service";
 import { DateTimeComponent } from "./date-time.component";
 import { IncidentGateway } from "./incident.gateway";
 import { IncidentService } from "./incident.service";
@@ -37,6 +38,7 @@ import { TimelineTimePipe } from "./timeline-time.pipe";
 		Title,
 
 		// Application providers.
+		CacheService,
 		IncidentGateway,
 		IncidentService,
 		QuoteService,

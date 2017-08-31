@@ -8,6 +8,7 @@ import { Subscription } from "rxjs/Subscription";
 import { Title } from "@angular/platform-browser";
 
 // Import the application services.
+import { CacheService } from "./cache.service";
 import { Incident } from "./incident.service";
 import { IncidentService } from "./incident.service";
 import { Priority } from "./incident.service";
@@ -15,6 +16,8 @@ import { Quote } from "./quote.service";
 import { QuoteService } from "./quote.service";
 import { SlackSerializer } from "./slack-serializer";
 import { Status } from "./incident.service";
+import { Timezone } from "./timezones";
+import { timezones } from "./timezones";
 import { Update } from "./incident.service";
 import { _ } from "./lodash-extended";
 
@@ -46,6 +49,7 @@ export class AppComponent implements OnInit {
 		updateDescription: string;
 		slackSize: number;
 		slackFormat: string;
+		slackTimezone: Timezone;
 		slack: string;
 	};
 	public incident: Incident;
@@ -53,7 +57,9 @@ export class AppComponent implements OnInit {
 	public priorities: Priority[];
 	public quote: Quote;
 	public statuses: Status[];
+	public timezones: Timezone[];
 
+	private cacheService: CacheService;
 	private incidentService: IncidentService;
 	private location: Location;
 	private quoteService: QuoteService;
@@ -64,6 +70,7 @@ export class AppComponent implements OnInit {
 
 	// I initialize the app component.
 	constructor( 
+		cacheService: CacheService,
 		incidentService: IncidentService,
 		location: Location,
 		quoteService: QuoteService,
@@ -72,6 +79,7 @@ export class AppComponent implements OnInit {
 		) {
 
 		// Store injected properties.
+		this.cacheService = cacheService;
 		this.incidentService = incidentService;
 		this.location = location;
 		this.quoteService = quoteService;
@@ -84,6 +92,8 @@ export class AppComponent implements OnInit {
 		this.incidentID = null;
 		this.subscription = null;
 
+		this.timezones = timezones;
+
 		this.form = {
 			description: "",
 			priorityID: this.priorities[ 0 ].id,
@@ -93,6 +103,7 @@ export class AppComponent implements OnInit {
 			updateDescription: "",
 			slackSize: 5,
 			slackFormat: "compact",
+			slackTimezone: this.getDefaultTimezone(),
 			slack: ""
 		};
 
@@ -145,7 +156,7 @@ export class AppComponent implements OnInit {
 		this.incident.updates.sort( this.sortCreatedAtDesc );
 
 		// Optimistically update the Slack message formatting.
-		this.form.slack = this.slackSerializer.serialize( this.incident, this.form.slackSize, this.form.slackFormat );
+		this.form.slack = this.slackSerializer.serialize( this.incident, this.form.slackSize, this.form.slackFormat, this.form.slackTimezone );
 
 		// Reset the content, but leave the status selection - it will likely be used by
 		// the subsequent updates.
@@ -171,13 +182,17 @@ export class AppComponent implements OnInit {
 		this.incident.videoLink = this.form.videoLink;
 
 		// Optimistically update the Slack message formatting.
-		this.form.slack = this.slackSerializer.serialize( this.incident, this.form.slackSize, this.form.slackFormat );
+		this.form.slack = this.slackSerializer.serialize( this.incident, this.form.slackSize, this.form.slackFormat, this.form.slackTimezone );
 
 		this.updateDuration();
 		this.updateTitle();
 
 		// Finally, persist the incident changes.
 		this.incidentService.saveIncident( this.incident );
+
+		// Cache the selected timezone so it will default during page refresh or at the
+		// start of the next incident.
+		this.cacheService.set( "slackTimezone", this.form.slackTimezone );
 
 	}
 
@@ -203,7 +218,7 @@ export class AppComponent implements OnInit {
 		this.incident.updates = _.without( this.incident.updates, update );
 
 		// Optimistically update the Slack message formatting.
-		this.form.slack = this.slackSerializer.serialize( this.incident, this.form.slackSize, this.form.slackFormat );
+		this.form.slack = this.slackSerializer.serialize( this.incident, this.form.slackSize, this.form.slackFormat, this.form.slackTimezone );
 
 		// Finally, persist the incident changes.
 		this.incidentService.saveIncident( this.incident );
@@ -267,7 +282,7 @@ export class AppComponent implements OnInit {
 		this.incident.updates.sort( this.sortCreatedAtDesc );
 
 		// Optimistically update the Slack message formatting.
-		this.form.slack = this.slackSerializer.serialize( this.incident, this.form.slackSize, this.form.slackFormat );
+		this.form.slack = this.slackSerializer.serialize( this.incident, this.form.slackSize, this.form.slackFormat, this.form.slackTimezone );
 
 		this.editForm.update = null;
 
@@ -321,7 +336,7 @@ export class AppComponent implements OnInit {
 					this.form.videoLink = this.incident.videoLink;
 					this.form.updateStatusID = this.statuses[ 0 ].id;
 					this.form.updateDescription = "";
-					this.form.slack = this.slackSerializer.serialize( this.incident, this.form.slackSize, this.form.slackFormat );
+					this.form.slack = this.slackSerializer.serialize( this.incident, this.form.slackSize, this.form.slackFormat, this.form.slackTimezone );
 
 					// While this has nothing to do with the incident, let's cycle the 
 					// header quote whenever a new incident is started.
@@ -387,7 +402,7 @@ export class AppComponent implements OnInit {
 					this.form.videoLink = this.incident.videoLink;
 					this.form.updateStatusID = this.statuses[ 0 ].id;
 					this.form.updateDescription = "";
-					this.form.slack = this.slackSerializer.serialize( this.incident, this.form.slackSize, this.form.slackFormat );
+					this.form.slack = this.slackSerializer.serialize( this.incident, this.form.slackSize, this.form.slackFormat, this.form.slackTimezone );
 
 					// While this has nothing to do with the incident, let's cycle the 
 					// header quote whenever a new incident is started.
@@ -419,6 +434,42 @@ export class AppComponent implements OnInit {
 				}
 			)
 		;
+
+	}
+
+
+	// I return the default timezone for the Slack rendering. This will pull from the
+	// cache or default to EST.
+	private getDefaultTimezone() : Timezone {
+
+		// By default, we want to use the EST timezone (since this is what InVision 
+		// uses for its incident rendering). The Eastern timezone actually switches to
+		// daylight saving time roughly between March and November; but, since this 
+		// changes from year-to-year and will be overridden by the cache, we're just
+		// going to start with EST and defer to the user to change it.
+		var defaultTimezone = _.find(
+			this.timezones,
+			{
+				abbreviation: "EST",
+				name: "Eastern Standard Time (North America)"
+			}
+		);
+
+		// Now that we have our default, let's check to see if there is a persisted
+		// timezone in the cache set by the user.
+		var cachedTimezone = this.cacheService.get( "slackTimezone" );
+
+		// If there is a cached timezone, we want to actually search for the associated
+		// timezone even though their value-objects will be the same. The reason for 
+		// this is that the SELECT input will compare objects by REFERENCE, not by value,
+		// which won't work if we return the cached version directly.
+		if ( cachedTimezone ) {
+
+			defaultTimezone = ( _.find( this.timezones, cachedTimezone ) || defaultTimezone );
+
+		}
+
+		return( defaultTimezone );
 
 	}
 
@@ -507,7 +558,7 @@ export class AppComponent implements OnInit {
 					this.form.priorityID = this.incident.priority.id;
 					this.form.startedAt = this.incident.startedAt;
 					this.form.videoLink = this.incident.videoLink;
-					this.form.slack = this.slackSerializer.serialize( this.incident, this.form.slackSize, this.form.slackFormat );
+					this.form.slack = this.slackSerializer.serialize( this.incident, this.form.slackSize, this.form.slackFormat, this.form.slackTimezone );
 
 					this.updateDuration();
 					this.updateTitle();
