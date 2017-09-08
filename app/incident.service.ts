@@ -59,6 +59,14 @@ export class IncidentService {
 	// ---
 
 
+	// I delete the incident with the given ID. Returns a Promise.
+	public deleteIncident( id: string ) : Promise<void> {
+
+		return( this.incidentGateway.deleteIncident( id ) );
+
+	}
+
+
 	// I return the incident with the given ID. Returns a Promise.
 	public getIncident( id: string ) : Promise<Incident> {
 

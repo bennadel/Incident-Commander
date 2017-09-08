@@ -98,7 +98,7 @@ export class IncidentGateway {
 		// NOTE: This will delete locally and attempt to remove the data to the remote
 		// Firebase server. It returns a Promise that will resolve when the data is 
 		// deleted remotely. For now, we're only going to care about the local operation.
-		this.firebaseDB.ref( "/incident/" + id )
+		this.firebaseDB.ref( "/incidents/" + id )
 			.remove()
 			.catch(
 				( error: any ) : void => {

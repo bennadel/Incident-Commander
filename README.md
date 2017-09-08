@@ -24,8 +24,10 @@ updates into a tightly-formatted Slack message that I can quickly copy-and-paste
   [Firebase][firebase] Backend-as-a-Service (Baas) library. This is a **public
   database**, which means you shouldn't store _overly-sensitive_ information in your 
   incident. However, the URLs for the individual incidents are extremely hard to guess.
-  The benefit of using Firebase is that you can copy-and-paste an Incident URL to another
-  teammate who can take-over as the Incident Commander.
+  And, you can **delete your incident** when you are done with it (which will delete it
+  from Firebase as well). That said, the benefit of using Firebase is that you can 
+  copy-and-paste an Incident URL to another teammate who can take-over as the Incident
+  Commander.
 * **Local Timezone** - The `#Incident` channel has to be updated using the EST timezone.
   Which is difficult for the majority of people who are not on the east coast. In this 
   app, you can use your local timezone and the generated Slack message will automatically

@@ -205,6 +205,35 @@ export class AppComponent implements OnInit {
 	}
 
 
+	// I delete the currently active incident.
+	public deleteIncident() : void {
+
+		if ( ! confirm( "Are you sure you want to delete this incident? This cannot be undone!" ) ) {
+
+			return;
+
+		}
+
+		// If we're subscribed to the current incident, unsubscribe.
+		if ( this.subscription ) {
+
+			this.subscription.unsubscribe();
+			this.subscription = null;
+
+		}
+
+		this.incidentService.deleteIncident( this.incident.id );
+
+		// Optimistically apply the changes to the local state.
+		this.incidentID = null;
+		this.incident = null;
+		
+		// Redirect back to the introductory view.
+		this.location.go( "" );
+
+	}
+
+
 	// I delete the given update.
 	public deleteUpdate( update: Update ) : void {
 

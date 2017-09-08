@@ -5,6 +5,7 @@
 	font-family: "Open Sans", "sans-serif" ;
 	font-size: 16px ;
 	font-weight: 300 ;
+	line-height: 22px ;
 }
 
 a {
@@ -66,7 +67,6 @@ textarea {
 	background-color: #FF2E63 ;
 	border-radius: 30px 30px 30px 30px ;
 	color: #FFFFFF ;
-	cursor: pointer ;
 	display: inline-block ;
 	font-size: 14px ;
 	font-weight: 400 ;
@@ -76,6 +76,11 @@ textarea {
 	padding: 0px 35px 0px 35px ;
 	text-decoration: none ;
 	text-transform: uppercase ;
+	transition: background-color 300ms ease ;
+}
+
+.app-intro__start:hover {
+	background-color: #F71953 ;
 }
 
 .app-caution {
@@ -172,7 +177,6 @@ textarea {
 	background-color: #FF2E63 ;
 	border-radius: 30px 30px 30px 30px ;
 	color: #FFFFFF ;
-	cursor: pointer ;
 	display: block ;
 	font-size: 12px ;
 	font-weight: 400 ;
@@ -181,6 +185,7 @@ textarea {
 	padding: 0px 30px 0px 30px ;
 	text-decoration: none ;
 	text-transform: uppercase ;
+	transition: background-color 300ms ease ;
 }
 
 .incident-io__start:hover {
@@ -267,8 +272,6 @@ textarea {
 
 .form__secondary-action {
 	color: #999999 ;
-	cursor: pointer ;
-	text-decoration: underline ;
 	text-transform: lowercase ;
 }
 
@@ -372,11 +375,25 @@ span.local-time-note {
 .timeline__edit,
 .timeline__delete {
 	color: #333333 ;
-	cursor: pointer ;
-	text-decoration: underline ;
 }
 
 .timeline__separator {
 	display: inline-block ;
 	margin: 0px 5px 0px 5px ;
+}
+
+.app-footer {
+	border-top: 2px solid #CCCCCC ;
+	margin: 40px 0px 0px 0px ;
+	padding-top: 12px ;
+}
+
+.app-footer__action a {
+	color: #000000 ;
+	font-weight: 400 ;
+	transition: color 300ms ease ;
+}
+
+.app-footer__action a:hover {
+	color: #F71953 ;
 }
