@@ -12,6 +12,7 @@ import "@angular/platform-browser-dynamic";
 import "firebase/app";
 import "firebase/database";
 import "lodash/find";
+import "lodash/last";
 import "lodash/random";
 import "lodash/range";
 import "lodash/without";

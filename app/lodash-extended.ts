@@ -1,6 +1,7 @@
 
 // Import the core angular services.
 import find = require( "lodash/find" );
+import last = require( "lodash/last" );
 import random = require( "lodash/random" );
 import range = require( "lodash/range" );
 import without = require( "lodash/without" );
@@ -11,6 +12,7 @@ import without = require( "lodash/without" );
 // will need to be echoed in your "vendor" module).
 export var _ = {
 	find,
+	last,
 	random,
 	range,
 	without
