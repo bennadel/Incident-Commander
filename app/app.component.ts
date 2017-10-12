@@ -310,6 +310,16 @@ export class AppComponent implements OnInit {
 		update.createdAt = this.editForm.createdAt;
 		this.incident.updates.sort( this.sortCreatedAtDesc );
 
+		// If we're editing the most recent status update, let's make sure we mirror the
+		// selected status in the overall incident as well as the in new update form 
+		// (since the next update is more likely to match the most recent update).
+		if ( update === this.incident.updates[ this.incident.updates.length - 1 ] ) {
+
+			this.incident.status = update.status;
+			this.form.updateStatusID = update.status.id;
+
+		}
+
 		// Optimistically update the Slack message formatting.
 		this.form.slack = this.slackSerializer.serialize( this.incident, this.form.slackSize, this.form.slackFormat, this.form.slackTimezone );
 
