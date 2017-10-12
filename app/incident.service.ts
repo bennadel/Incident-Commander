@@ -36,6 +36,7 @@ export interface Incident {
 	priority: Priority;
 	status: Status;
 	startedAt: Date;
+	timezoneID: string;
 	videoLink: string;
 	updates: Update[];
 }
@@ -194,6 +195,7 @@ export class IncidentService {
 			priority: priorities[ 0 ],
 			status: statuses[ 0 ],
 			startedAt: new Date(),
+			timezoneID: "",
 			videoLink: `https://hangouts.google.com/hangouts/_/invisionapp.com/${ name }`,
 			updates: []
 		}
@@ -241,6 +243,7 @@ export class IncidentService {
 			priority: _.find( priorities, [ "id", dto.priorityID ] ),
 			status: _.find( statuses, [ "id", dto.statusID ] ),
 			startedAt: new Date( dto.startedAt ),
+			timezoneID: dto.timezoneID,
 			videoLink: dto.videoLink,
 			updates: dto.updates.map(
 				( update: UpdateDTO ) : Update => {
@@ -280,6 +283,7 @@ export class IncidentService {
 			priorityID: incident.priority.id,
 			statusID: incident.status.id,
 			startedAt: incident.startedAt.getTime(),
+			timezoneID: incident.timezoneID,
 			videoLink: incident.videoLink,
 			updates: incident.updates.map(
 				( update: Update ) : UpdateDTO => {

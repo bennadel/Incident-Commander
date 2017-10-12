@@ -21,6 +21,7 @@ export interface IncidentDTO {
 	priorityID: string;
 	statusID: string;
 	startedAt: number;
+	timezoneID: string;
 	videoLink: string;
 	updates?: UpdateDTO[]; // Optional because Firebase doesn't return empty Arrays.
 }
@@ -139,6 +140,10 @@ export class IncidentGateway {
 					// Updates collection exists before we return it.
 					dto.updates = ( dto.updates || [] );
 
+					// This field was added after data was being persisted. As such, it 
+					// may not exist on all the given data transfer objects.
+					dto.timezoneID = ( dto.timezoneID || "" );
+
 					return( dto );
 
 				}
@@ -180,6 +185,10 @@ export class IncidentGateway {
 						// it favors Objects for collections). As such, let's ensure that 
 						// the Updates collection exists before we return it.
 						dto.updates = ( dto.updates || [] );
+
+						// This field was added after data was being persisted. As such, 
+						// it may not exist on all the given data transfer objects.
+						dto.timezoneID = ( dto.timezoneID || "" );
 
 						observer.next( dto );
 

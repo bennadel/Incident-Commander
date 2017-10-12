@@ -179,6 +179,7 @@ export class AppComponent implements OnInit {
 		this.incident.description = this.form.description;
 		this.incident.priority = _.find( this.priorities, [ "id", this.form.priorityID ] );
 		this.incident.startedAt = this.form.startedAt;
+		this.incident.timezoneID = this.form.slackTimezone.id;
 		this.incident.videoLink = this.form.videoLink;
 
 		// Optimistically update the Slack message formatting.
@@ -444,6 +445,15 @@ export class AppComponent implements OnInit {
 						: this.statuses[ 0 ].id
 					;
 					this.form.updateDescription = "";
+					// Since the timezoneID was added to the Incident interface after 
+					// data had already been persisted, the ID may not be valid. As 
+					// such, we'll OR with whatever timezone is currently selected.
+					this.form.slackTimezone = _.find(
+						this.timezones,
+						{
+							id: ( this.incident.timezoneID || this.form.slackTimezone.id )
+						}
+					);
 					this.form.slack = this.slackSerializer.serialize( this.incident, this.form.slackSize, this.form.slackFormat, this.form.slackTimezone );
 
 					// While this has nothing to do with the incident, let's cycle the 
@@ -492,8 +502,7 @@ export class AppComponent implements OnInit {
 		var defaultTimezone = _.find(
 			this.timezones,
 			{
-				abbreviation: "EST",
-				name: "Eastern Standard Time (North America)"
+				id: "1de70413-cdc4-4eee-baea-6acb6bf41f4f" // EST
 			}
 		);
 
@@ -604,6 +613,15 @@ export class AppComponent implements OnInit {
 						? _.last( this.incident.updates ).status.id
 						: this.statuses[ 0 ].id
 					;
+					// Since the timezoneID was added to the Incident interface after 
+					// data had already been persisted, the ID may not be valid. As 
+					// such, we'll OR with whatever timezone is currently selected.
+					this.form.slackTimezone = _.find(
+						this.timezones,
+						{
+							id: ( this.incident.timezoneID || this.form.slackTimezone.id )
+						}
+					);
 					this.form.slack = this.slackSerializer.serialize( this.incident, this.form.slackSize, this.form.slackFormat, this.form.slackTimezone );
 
 					this.updateDuration();
