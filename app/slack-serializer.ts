@@ -3,6 +3,9 @@
 import { Incident } from "./incident.service";
 import { Timezone } from "./timezones";
 
+var WEEKDAYS = [ "Sun", "Mon", "Tue", "Wed", "Thr", "Fri", "Sat" ];
+var MONTHS = [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ];
+
 export class SlackSerializer {
 
 	// I serialize the given incident for use in a Slack message.
@@ -16,7 +19,7 @@ export class SlackSerializer {
 		var parts = [
 			`*Incident Description*: ${ incident.description }`,
 			`*Priority*: ${ incident.priority.id }`,
-			`*Start of Customer Impact*: ${ this.formatTime( incident.startedAt, timezone ) }`,
+			`*Start of Customer Impact*: ${ this.formatTime( incident.startedAt, timezone ) } on ${ this.formatDate( incident.startedAt, timezone ) }`,
 			`*Zoom or Hangout link*: \`${ incident.videoLink }\` `,
 			`*Status*: ${ incident.status.id }`,
 			`*Timeline*: \`https://bennadel.github.io/Incident-Commander/#${ incident.id }\` `
@@ -69,20 +72,24 @@ export class SlackSerializer {
 	// ---
 
 
+	// I format the given Date object as a date string in EST / EDT timezone.
+	private formatDate( value: Date, timezone: Timezone ) : string {
+
+		var slackDate = this.getDateInTimezone( value, timezone );
+
+		var normalizedWeekday = WEEKDAYS[ slackDate.getDay() ];
+		var normalizedMonth = MONTHS[ slackDate.getMonth() ];
+		
+		return( `${ normalizedWeekday }, ${ normalizedMonth } ${ slackDate.getDate() }, ${ slackDate.getFullYear() }` );
+
+	}
+
+
 	// I format the given Date object as a time string in the EST / EDT timezone.
 	private formatTime( value: Date, timezone: Timezone ) : string {
 
-		// In order to [try our best to] convert from the local timezone to the Slack
-		// timezone for rendering, we're going to use the difference in offset minutes
-		// to alter a local copy of the Date object.
-		var offsetDelta = ( timezone.offset - value.getTimezoneOffset() );
-
-		// Clone the date so we don't mess up the original value as we adjust it.
-		var slackDate = new Date( value );
-
-		// Attempt to move from the current TZ to the given TZ by adjusting minutes.
-		slackDate.setMinutes( slackDate.getMinutes() - offsetDelta );
-
+		var slackDate = this.getDateInTimezone( value, timezone );
+		
 		var hours = slackDate.getHours();
 		var minutes = slackDate.getMinutes();
 		var period = ( hours < 12 )
@@ -94,6 +101,25 @@ export class SlackSerializer {
 		var normalizedMinutes = ( "0" + minutes ).slice( -2 );
 
 		return( `${ normalizedHours }:${ normalizedMinutes } ${ period } ${ timezone.abbreviation }` );
+
+	}
+
+
+	// I return the given local date adjusted for the given timezone.
+	private getDateInTimezone( value: Date, timezone: Timezone ) : Date {
+
+		// In order to [try our best to] convert from the local timezone to the Slack
+		// timezone for rendering, we're going to use the difference in offset minutes
+		// to alter a local copy of the Date object.
+		var offsetDelta = ( timezone.offset - value.getTimezoneOffset() );
+
+		// Clone the date so we don't mess up the original value as we adjust it.
+		var adjustedDate = new Date( value );
+
+		// Attempt to move from the current TZ to the given TZ by adjusting minutes.
+		adjustedDate.setMinutes( adjustedDate.getMinutes() - offsetDelta );
+
+		return( adjustedDate );
 
 	}
 
