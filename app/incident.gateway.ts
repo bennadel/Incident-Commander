@@ -15,23 +15,15 @@ export interface UpdateDTO {
 }
 
 export interface IncidentDTO {
-	version: "general" | "invision" | null;
-
-	// Core properties.
 	id: string | null;
 	name: string;
 	description: string;
+	priorityID: string;
 	statusID: string;
 	startedAt: number;
 	timezoneID: string;
 	videoLink: string;
 	updates?: UpdateDTO[]; // Optional because Firebase doesn't return empty Arrays.
-
-	// General Version (also, the un-versioned version).
-	priorityID: string;
-
-	// InVision Version
-
 }
 
 export class IncidentGateway {
