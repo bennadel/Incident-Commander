@@ -18,7 +18,7 @@ interface DateOption {
 	inputs: [ "value" ],
 	outputs: [ "valueChange" ],
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	styleUrls: [ "./date-time.component.css" ],
+	styleUrls: [ "./date-time.component.less" ],
 	templateUrl: "./date-time.component.htm"
 })
 export class DateTimeComponent {
