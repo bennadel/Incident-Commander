@@ -42,6 +42,9 @@ export class AppComponent implements OnInit {
 	};
 	public form: {
 		description: string;
+		version: string;
+		customerType: string;
+		customerCount: string;
 		priorityID: string;
 		startedAt: Date | null;
 		videoLink: string;
@@ -95,7 +98,10 @@ export class AppComponent implements OnInit {
 		this.timezones = timezones;
 
 		this.form = {
+			version: this.getDefaultVersion(),
 			description: "",
+			customerType: "",
+			customerCount: "",
 			priorityID: this.priorities[ 0 ].id,
 			startedAt: null,
 			videoLink: "",
@@ -176,7 +182,10 @@ export class AppComponent implements OnInit {
 		this.form.startedAt = ( this.form.startedAt || this.incident.startedAt );
 
 		// Optimistically apply the changes to the local incident.
+		this.incident.version = this.form.version;
 		this.incident.description = this.form.description;
+		this.incident.customerType = this.form.customerType;
+		this.incident.customerCount = this.form.customerCount;
 		this.incident.priority = _.find( this.priorities, [ "id", this.form.priorityID ] );
 		this.incident.startedAt = this.form.startedAt;
 		this.incident.timezoneID = this.form.slackTimezone.id;
@@ -370,7 +379,10 @@ export class AppComponent implements OnInit {
 					this.incident = incident;
 
 					// Move the new incident data into the form.
+					this.form.version = this.incident.version;
 					this.form.description = this.incident.description;
+					this.form.customerType = this.incident.customerType;
+					this.form.customerCount = this.incident.customerCount;
 					this.form.priorityID = this.incident.priority.id;
 					this.form.startedAt = this.incident.startedAt;
 					this.form.videoLink = this.incident.videoLink;
@@ -393,6 +405,15 @@ export class AppComponent implements OnInit {
 				}
 			)
 		;
+
+	}
+
+
+	// I switch over to the given version of the intake form.
+	public useVersion( version: string ) : void {
+
+		this.form.version = this.cacheService.set( "version", version );
+		this.applyForm();
 
 	}
 
@@ -436,7 +457,10 @@ export class AppComponent implements OnInit {
 					this.incident = incident;
 
 					// Move the new incident data into the form.
+					this.form.version = this.incident.version;
 					this.form.description = this.incident.description;
+					this.form.customerType = this.incident.customerType;
+					this.form.customerCount = this.incident.customerCount;
 					this.form.priorityID = this.incident.priority.id;
 					this.form.startedAt = this.incident.startedAt;
 					this.form.videoLink = this.incident.videoLink;
@@ -525,6 +549,16 @@ export class AppComponent implements OnInit {
 	}
 
 
+	// I return the default version of the intake form. This will pull from the cache.
+	private getDefaultVersion() : string {
+
+		var cachedVersion = this.cacheService.get( "version" );
+
+		return( cachedVersion || "general" );
+
+	}
+
+
 	// I setup the duration interval that re-calculates the duration based on the start
 	// time of the current incident.
 	private setupDurationInterval() : void {
@@ -605,7 +639,10 @@ export class AppComponent implements OnInit {
 					this.incident = incident;
 
 					// Move the new incident data into the form.
+					this.form.version = this.incident.version;
 					this.form.description = this.incident.description;
+					this.form.customerType = this.incident.customerType;
+					this.form.customerCount = this.incident.customerCount;
 					this.form.priorityID = this.incident.priority.id;
 					this.form.startedAt = this.incident.startedAt;
 					this.form.videoLink = this.incident.videoLink;

@@ -96,6 +96,32 @@
 			<form class="form">
 
 				<div class="form__field">
+					<div class="form__field-label form__field-label--version">
+						Version:
+					</div>
+					<div class="form__field-body">
+
+						<div class="versions">
+							<span
+								(click)="useVersion( 'general' )"
+								class="versions__version"
+								[class.versions__version--off]="( form.version !== 'general' )"
+								[class.versions__version--on]="( form.version === 'general' )">
+								General Version
+							</span>
+							<span
+								(click)="useVersion( 'invision' )"
+								class="versions__version versions__version--on"
+								[class.versions__version--off]="( form.version !== 'invision' )"
+								[class.versions__version--on]="( form.version === 'invision' )">
+								InVision Version
+							</span>
+						</div>
+
+					</div>
+				</div>
+
+				<div class="form__field">
 					<div class="form__field-label">
 						Description:
 					</div>
@@ -106,7 +132,32 @@
 					</div>
 				</div>
 
-				<div class="form__field">
+				<div *ngIf="( form.version === 'invision' )" class="form__field">
+					<div class="form__field-label">
+						Customers:
+					</div>
+					<div class="form__field-body customers">
+
+						<div class="customers__item">
+							<input type="text" name="customerType" [(ngModel)]="form.customerType" (ngModelChange)="applyForm()" class="customers__input" />
+							<div class="customers__note">
+								<span class="customers__label">Type of Customers:</span>
+								<span class="customers__values">None | Internal | EA | MT | PC</span>
+							</div>
+						</div>
+
+						<div class="customers__item">
+							<input type="text" name="customerCount" [(ngModel)]="form.customerCount" (ngModelChange)="applyForm()" class="customers__input" />
+							<div class="customers__note">
+								<span class="customers__label">Number Affected:</span>
+								<span class="customers__values">Few | Some | Many | All</span>
+							</div>
+						</div>
+
+					</div>
+				</div>
+
+				<div *ngIf="( form.version === 'general' )" class="form__field">
 					<div class="form__field-label">
 						Priority:
 					</div>

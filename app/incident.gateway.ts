@@ -17,7 +17,10 @@ export interface UpdateDTO {
 export interface IncidentDTO {
 	id: string | null;
 	name: string;
+	version: string; // general | invision.
 	description: string;
+	customerType: string;
+	customerCount: string;
 	priorityID: string;
 	statusID: string;
 	startedAt: number;
@@ -140,9 +143,12 @@ export class IncidentGateway {
 					// Updates collection exists before we return it.
 					dto.updates = ( dto.updates || [] );
 
-					// This field was added after data was being persisted. As such, it 
-					// may not exist on all the given data transfer objects.
+					// These fields were added after data was being persisted. As such, 
+					// they may not exist on all the given data transfer objects.
+					dto.version = ( dto.version || "general" );
 					dto.timezoneID = ( dto.timezoneID || "" );
+					dto.customerType = ( dto.customerType || "" );
+					dto.customerCount = ( dto.customerCount || "" );
 
 					return( dto );
 
@@ -186,9 +192,12 @@ export class IncidentGateway {
 						// the Updates collection exists before we return it.
 						dto.updates = ( dto.updates || [] );
 
-						// This field was added after data was being persisted. As such, 
-						// it may not exist on all the given data transfer objects.
+						// These fields were added after data was being persisted. As such,
+						// they may not exist on all the given data transfer objects.
+						dto.version = ( dto.version || "general" );
 						dto.timezoneID = ( dto.timezoneID || "" );
+						dto.customerType = ( dto.customerType || "" );
+						dto.customerCount = ( dto.customerCount || "" );
 
 						observer.next( dto );
 

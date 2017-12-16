@@ -16,14 +16,24 @@ export class SlackSerializer {
 		timezone: Timezone
 		) : string {
 
-		var parts = [
-			`*Incident Description*: ${ incident.description }`,
-			`*Priority*: ${ incident.priority.id }`,
-			`*Start of Customer Impact*: ${ this.formatTime( incident.startedAt, timezone ) } on ${ this.formatDate( incident.startedAt, timezone ) }`,
-			`*Zoom or Hangout link*: \`${ incident.videoLink }\` `,
-			`*Status*: ${ incident.status.id }`,
-			`*Timeline*: \`https://bennadel.github.io/Incident-Commander/#${ incident.id }\` `
-		];
+		var parts = [];
+		parts.push( `*Incident Description*: ${ incident.description }` );
+
+		if ( incident.version === "general" ) {
+
+			parts.push( `*Priority*: ${ incident.priority.id }` );
+
+		} else {
+
+			parts.push( `*Customer Type*: ${ incident.customerType || "_Unknown_" }` );
+			parts.push( `*Customer Count*: ${ incident.customerCount || "_Unknown_" }` );
+
+		}
+
+		parts.push( `*Start of Impact*: ${ this.formatTime( incident.startedAt, timezone ) } on ${ this.formatDate( incident.startedAt, timezone ) }` );
+		parts.push( `*Zoom or Hangout link*: \`${ incident.videoLink }\` ` );
+		parts.push( `*Status*: ${ incident.status.id }` );
+		parts.push( `*Timeline*: \`https://bennadel.github.io/Incident-Commander/#${ incident.id }\` ` );
 
 		var visibleUpdates = incident.updates.slice( -updateLimit );
 
@@ -56,13 +66,16 @@ export class SlackSerializer {
 			}
 
 			var update = visibleUpdates[ i ];
+			var segment = `*${ this.formatTime( update.createdAt, timezone ) } [ ${ update.status.id } ]*: \u2014 ${ update.description }`;
 
-			parts.push( `> *${ this.formatTime( update.createdAt, timezone ) } [ ${ update.status.id } ]*: \u2014 ${ update.description }` );
+			// Since there may be hard line-breaks within each Slack message, we need
+			// to make sure to add the quote character (">") to every start-of-line, 
+			// otherwise the message will wrap incorrectly.
+			parts.push( segment.replace( /^/gm, "> " ) );
 
 		}
 
 		return( parts.join( "\n" ) );
-
 
 	}
 

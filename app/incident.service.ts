@@ -32,7 +32,10 @@ export interface Update {
 export interface Incident {
 	id?: string;
 	name: string;
+	version: string;
 	description: string;
+	customerType: string;
+	customerCount: string;
 	priority: Priority;
 	status: Status;
 	startedAt: Date;
@@ -191,7 +194,10 @@ export class IncidentService {
 		var incident: Incident = {
 			id: null, // This will be defined as part of the gateway operation.
 			name: name,
+			version: "general",
 			description: "",
+			customerType: "",
+			customerCount: "",
 			priority: priorities[ 0 ],
 			status: statuses[ 0 ],
 			startedAt: new Date(),
@@ -239,7 +245,10 @@ export class IncidentService {
 		var incident = {
 			id: dto.id,
 			name: dto.name,
+			version: dto.version,
 			description: dto.description,
+			customerType: dto.customerType,
+			customerCount: dto.customerCount,
 			priority: _.find( priorities, [ "id", dto.priorityID ] ),
 			status: _.find( statuses, [ "id", dto.statusID ] ),
 			startedAt: new Date( dto.startedAt ),
@@ -279,7 +288,10 @@ export class IncidentService {
 		var dto = {
 			id: incident.id,
 			name: incident.name,
+			version: incident.version,
 			description: incident.description,
+			customerType: incident.customerType,
+			customerCount: incident.customerCount,
 			priorityID: incident.priority.id,
 			statusID: incident.status.id,
 			startedAt: incident.startedAt.getTime(),

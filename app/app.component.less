@@ -18,12 +18,13 @@ a {
 }
 
 input {
+	box-sizing: border-box ;
 	font-size: 16px ;
 	padding: 5px 5px 5px 5px ;
 }
 
 input.large {
-	width: 950px ;
+	width: 100% ;
 }
 
 button {
@@ -40,11 +41,12 @@ select {
 }
 
 textarea {
+	box-sizing: border-box ;
 	display: block ;
 	font-size: 16px ;
-	height: 60px ;
+	height: 70px ;
 	padding: 5px 5px 5px 5px ;
-	width: 950px ;
+	width: 100% ;
 }
 
 .app-intro {
@@ -226,34 +228,30 @@ textarea {
 
 .form {
 	&__field {
-		margin: 15px 0px 18px 0px ;
+		display: flex ;
+		margin: 15px 20px 18px 0px ;
 
 		&--slack {
 			margin-top: 50px ;
 		}
 	}
 
-	&__field:after {
-		clear: both ;
-		content: "" ;
-		display: table ;
-		height: 0px ;
-	}
-
 	&__field-label {
-		float: left ;
+		flex: 0 0 150px ;
 		font-size: 18px ;
 		font-weight: 600 ;
 		line-height: 24px ;
+		margin-right: 20px ;
 		padding-top: 2px ;
 		text-align: right ;
-		width: 150px ;
+
+		&--version {
+			padding-top: 6px ;
+		}
 	}
 
 	&__field-body {
-		float: left ;
-		margin-left: 20px ;
-		width: 1000px ;
+		flex: 1 0 auto ;
 
 		&--select {
 			padding-top: 4px ;
@@ -273,6 +271,60 @@ textarea {
 		color: #999999 ;
 		text-transform: lowercase ;
 	}
+}
+
+.versions {
+	display: flex ;
+
+	&__version {
+		border: 1px solid #CCCCCC ;
+		border-radius: 4px 4px 4px 4px ;
+		color: #999999 ;
+		cursor: pointer ;
+		font-size: 13px ;
+		font-weight: 400 ;
+		line-height: 37px ;
+		margin-right: 10px ;
+		padding: 0px 25px 0px 25px ;
+		text-transform: uppercase ;
+
+		&--off:hover {
+			border-color: #46A85A ;
+			color: #46A85A ;
+		}
+
+		&--on {
+			background-color: #68BE7B ;
+			border-color: #46A85A ;
+			color: #FFFFFF ;
+		}
+	}
+}
+
+.customers {
+	display: flex ;
+	justify-content: space-between ;
+
+	&__item {
+		width: 49% ;
+	}
+
+	&__input {
+		width: 100% ;
+	}
+
+	&__note {
+		font-size: 14px ;
+		padding-top: 6px ;
+	}
+
+	&__label {
+		display: inline-block ;
+		font-weight: 600 ;
+		margin-right: 6px ;
+	}
+
+	&__values {}
 }
 
 span.local-time-note {
@@ -323,26 +375,18 @@ span.local-time-note {
 
 	&__item {
 		border-bottom: 1px solid #EEEEEE ;
-		margin-bottom: 15px ;
+		display: flex ;
+		margin: 0px 20px 15px 0px ;
 		padding-bottom: 15px ;
 	}
 
 	&__item:last-child {
 		border-bottom-width: 0px ;
-		padding-bottom: 15px ;
-	}
-
-	&__item:after {
-		clear: both ;
-		content: "" ;
-		display: table ;
-		height: 0px ;
 	}
 
 	&__createdAt {
-		float: left ;
+		flex: 0 0 150px ;
 		text-align: right ;
-		width: 150px ;
 	}
 
 	&__time {
@@ -354,10 +398,10 @@ span.local-time-note {
 	}
 
 	&__description {
-		float: left ;
+		flex: 1 1 auto ;
 		font-weight: 300 ;
 		margin-left: 20px ;
-		width: 900px ;
+		margin-right: 30px ;
 	}
 
 	&__status {
@@ -366,9 +410,7 @@ span.local-time-note {
 
 	&__actions {
 		color: #CCCCCC ;
-		float: right ;
-		text-align: right ;
-		width: 100px ;
+		white-space: nowrap ;
 	}
 
 	&__edit,
