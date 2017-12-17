@@ -185,7 +185,7 @@ export class IncidentService {
 
 
 	// I start a new incident, persist it, and return it. Returns a Promise.
-	public startNewIncident() : Promise<Incident> {
+	public startNewIncident( version: string, timezoneID: string ) : Promise<Incident> {
 
 		var priorities = this.getPriorities();
 		var statuses = this.getStatuses();
@@ -194,14 +194,14 @@ export class IncidentService {
 		var incident: Incident = {
 			id: null, // This will be defined as part of the gateway operation.
 			name: name,
-			version: "general",
+			version: version,
 			description: "",
 			customerType: "",
 			customerCount: "",
 			priority: priorities[ 0 ],
 			status: statuses[ 0 ],
 			startedAt: new Date(),
-			timezoneID: "",
+			timezoneID: timezoneID,
 			videoLink: `https://hangouts.google.com/hangouts/_/invisionapp.com/${ name }`,
 			updates: []
 		}

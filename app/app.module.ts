@@ -1,7 +1,6 @@
 
 // Import the core angular services.
 import { BrowserModule } from "@angular/platform-browser";
-import { enableProdMode } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { HashLocationStrategy } from "@angular/common";
 import { Location } from "@angular/common";
@@ -19,8 +18,6 @@ import { QuoteService } from "./quote.service";
 import { SlackSerializer } from "./slack-serializer";
 import { TimelineDatePipe } from "./timeline-date.pipe";
 import { TimelineTimePipe } from "./timeline-time.pipe";
-
-enableProdMode();
 
 @NgModule({
 	bootstrap: [ AppComponent ],

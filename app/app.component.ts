@@ -371,7 +371,10 @@ export class AppComponent implements OnInit {
 
 		// Create, persist, and return the new incident.
 		this.incidentService
-			.startNewIncident()
+			.startNewIncident(
+				this.getDefaultVersion(),
+				this.getDefaultTimezone().id 
+			)
 			.then(
 				( incident: Incident ) : void => {
 
@@ -389,6 +392,7 @@ export class AppComponent implements OnInit {
 					this.form.updateStatusID = this.statuses[ 0 ].id;
 					this.form.updateDescription = "";
 					this.form.slack = this.slackSerializer.serialize( this.incident, this.form.slackSize, this.form.slackFormat, this.form.slackTimezone );
+
 
 					// While this has nothing to do with the incident, let's cycle the 
 					// header quote whenever a new incident is started.
