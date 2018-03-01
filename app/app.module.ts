@@ -17,6 +17,7 @@ import { IncidentService } from "./incident.service";
 import { QuoteService } from "./quote.service";
 import { SlackSerializer } from "./slack-serializer";
 import { TimelineDatePipe } from "./timeline-date.pipe";
+import { TimelineSortPipe } from "./timeline-sort.pipe";
 import { TimelineTimePipe } from "./timeline-time.pipe";
 
 @NgModule({
@@ -26,6 +27,7 @@ import { TimelineTimePipe } from "./timeline-time.pipe";
 		AppComponent,
 		DateTimeComponent,
 		TimelineDatePipe,
+		TimelineSortPipe,
 		TimelineTimePipe
 	],
 	providers: [

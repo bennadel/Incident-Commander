@@ -285,6 +285,25 @@
 					Previous Updates
 				</h2>
 
+				<div class="section-header__attributes updates-sort">
+					<span class="updates-sort__label">
+						Sort:
+					</span>
+					<span class="updates-sort__selection">
+						<a
+							(click)="sortUpdates( 'asc' )"
+							class="updates-sort__direction"
+							[class.updates-sort__direction--on]="( updateSortDirection === 'asc' )"
+							>Asc</a>
+						-
+						<a
+							(click)="sortUpdates( 'desc' )"
+							class="updates-sort__direction"
+							[class.updates-sort__direction--on]="( updateSortDirection === 'desc' )"
+							>Desc</a>
+					</span>
+				</div>
+
 			</header>
 
 			<!-- BEGIN: Edit Form. -->
@@ -359,7 +378,7 @@
 
 				<div class="timeline">
 
-					<div *ngFor="let update of incident.updates" class="timeline__item">
+					<div *ngFor="let update of incident.updates | timelineSort : updateSortDirection" class="timeline__item">
 
 						<div class="timeline__createdAt">
 							<div class="timeline__time">

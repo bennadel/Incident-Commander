@@ -61,6 +61,7 @@ export class AppComponent implements OnInit {
 	public quote: Quote;
 	public statuses: Status[];
 	public timezones: Timezone[];
+	public updateSortDirection: "asc" | "desc";
 
 	private cacheService: CacheService;
 	private incidentService: IncidentService;
@@ -94,6 +95,7 @@ export class AppComponent implements OnInit {
 		this.incident = null;
 		this.incidentID = null;
 		this.subscription = null;
+		this.updateSortDirection = "desc";
 
 		this.timezones = timezones;
 
@@ -338,6 +340,16 @@ export class AppComponent implements OnInit {
 		// Finally, persist the incident changes.
 		this.incidentService.saveIncident( this.incident );
 		
+	}
+
+
+	// I update the sort-direction for the timeline.
+	// --
+	// NOTE: Actual sorting is done by a Pipe in the template.
+	public sortUpdates( direction: "asc" | "desc" ) : void {
+
+		this.updateSortDirection = direction;
+
 	}
 
 
