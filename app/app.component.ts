@@ -534,15 +534,27 @@ export class AppComponent implements OnInit {
 	// cache or default to EST.
 	private getDefaultTimezone() : Timezone {
 
-		// By default, we want to use the EST timezone (since this is what InVision 
-		// uses for its incident rendering). The Eastern timezone actually switches to
-		// daylight saving time roughly between March and November; but, since this 
-		// changes from year-to-year and will be overridden by the cache, we're just
-		// going to start with EST and defer to the user to change it.
+		// By default, we want to use the Eastern timezone (since this is what
+		// InVision uses for its incident rendering). So when we pick the default
+		// timezone, we want to make sure we pick the right Eastern timezone if we
+		// are in Daylight time or Standard time
+
+		var defaultTZID;
+
+		if ( this.isDST() ) {
+
+			defaultTZID = "3ca59164-cc12-444d-aa11-0ca961e17e08";
+
+		} else {
+
+			defaultTZID = "1de70413-cdc4-4eee-baea-6acb6bf41f4f";
+
+		}
+
 		var defaultTimezone = _.find(
 			this.timezones,
 			{
-				id: "1de70413-cdc4-4eee-baea-6acb6bf41f4f" // EST
+				id: defaultTZID,
 			}
 		);
 
@@ -562,6 +574,15 @@ export class AppComponent implements OnInit {
 
 		return( defaultTimezone );
 
+	}
+
+	private isDST() : boolean {
+		var today = new Date();
+		var jan = new Date(today.getFullYear(), 0, 1);
+		var jul = new Date(today.getFullYear(), 6, 1);
+		var stdTimeZoneOffset = Math.max(jan.getTimezoneOffset(), jul.getTimezoneOffset());
+
+		return today.getTimezoneOffset() < stdTimeZoneOffset;
 	}
 
 
