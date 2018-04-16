@@ -21,6 +21,8 @@ export interface IncidentDTO {
 	description: string;
 	customerType: string;
 	customerCount: string;
+	internalTeam: string;
+	zendeskTicket: string;
 	priorityID: string;
 	statusID: string;
 	startedAt: number;
@@ -149,6 +151,8 @@ export class IncidentGateway {
 					dto.timezoneID = ( dto.timezoneID || "" );
 					dto.customerType = ( dto.customerType || "" );
 					dto.customerCount = ( dto.customerCount || "" );
+					dto.internalTeam = ( dto.internalTeam || "" );
+					dto.zendeskTicket = ( dto.zendeskTicket || "" );
 
 					return( dto );
 
@@ -198,6 +202,8 @@ export class IncidentGateway {
 						dto.timezoneID = ( dto.timezoneID || "" );
 						dto.customerType = ( dto.customerType || "" );
 						dto.customerCount = ( dto.customerCount || "" );
+						dto.internalTeam = ( dto.internalTeam || "" );
+						dto.zendeskTicket = ( dto.zendeskTicket || "" );
 
 						observer.next( dto );
 

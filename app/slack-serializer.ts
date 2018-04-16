@@ -25,6 +25,15 @@ export class SlackSerializer {
 
 		} else {
 
+			if ( incident.zendeskTicket ) {
+
+				incident.zendeskTicket.includes( "/" )
+					? parts.push( `*Zendesk Ticket*: \`${ incident.zendeskTicket }\`` )
+					: parts.push( `*Zendesk Ticket*: \`https://invisionapp.zendesk.com/agent/tickets/${ incident.zendeskTicket }\``)
+				;
+
+			}
+
 			parts.push( `*Customer Type*: ${ incident.customerType || "_Unknown_" }` );
 			parts.push( `*Customer Count*: ${ incident.customerCount || "_Unknown_" }` );
 
@@ -33,6 +42,16 @@ export class SlackSerializer {
 		parts.push( `*Start of Impact*: ${ this.formatTime( incident.startedAt, timezone ) } on ${ this.formatDate( incident.startedAt, timezone ) }` );
 		parts.push( `*Zoom or Hangout link*: \`${ incident.videoLink }\` ` );
 		parts.push( `*Status*: ${ incident.status.id }` );
+
+		if ( incident.version === "invision" ) {
+
+			incident.internalTeam
+				? parts.push( `*Team Writing RCA*: ${ incident.internalTeam }` )
+				: parts.push( `*Team Writing RCA*: _The team responsible for writing the RCA is not yet clear._` )
+			;
+
+		}
+
 		parts.push( `*Timeline*: \`https://bennadel.github.io/Incident-Commander/#${ incident.id }\` ` );
 
 		var visibleUpdates = incident.updates.slice( -updateLimit );

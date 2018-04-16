@@ -45,6 +45,8 @@ export class AppComponent implements OnInit {
 		version: string;
 		customerType: string;
 		customerCount: string;
+		internalTeam: string;
+		zendeskTicket: string;
 		priorityID: string;
 		startedAt: Date | null;
 		videoLink: string;
@@ -104,6 +106,8 @@ export class AppComponent implements OnInit {
 			description: "",
 			customerType: "",
 			customerCount: "",
+			internalTeam: "",
+			zendeskTicket: "",
 			priorityID: this.priorities[ 0 ].id,
 			startedAt: null,
 			videoLink: "",
@@ -188,6 +192,8 @@ export class AppComponent implements OnInit {
 		this.incident.description = this.form.description;
 		this.incident.customerType = this.form.customerType;
 		this.incident.customerCount = this.form.customerCount;
+		this.incident.internalTeam = this.form.internalTeam;
+		this.incident.zendeskTicket = this.form.zendeskTicket;
 		this.incident.priority = _.find( this.priorities, [ "id", this.form.priorityID ] );
 		this.incident.startedAt = this.form.startedAt;
 		this.incident.timezoneID = this.form.slackTimezone.id;
@@ -398,6 +404,8 @@ export class AppComponent implements OnInit {
 					this.form.description = this.incident.description;
 					this.form.customerType = this.incident.customerType;
 					this.form.customerCount = this.incident.customerCount;
+					this.form.internalTeam = this.incident.internalTeam;
+					this.form.zendeskTicket = this.incident.zendeskTicket;
 					this.form.priorityID = this.incident.priority.id;
 					this.form.startedAt = this.incident.startedAt;
 					this.form.videoLink = this.incident.videoLink;
@@ -477,6 +485,8 @@ export class AppComponent implements OnInit {
 					this.form.description = this.incident.description;
 					this.form.customerType = this.incident.customerType;
 					this.form.customerCount = this.incident.customerCount;
+					this.form.internalTeam = this.incident.internalTeam;
+					this.form.zendeskTicket = this.incident.zendeskTicket;
 					this.form.priorityID = this.incident.priority.id;
 					this.form.startedAt = this.incident.startedAt;
 					this.form.videoLink = this.incident.videoLink;
@@ -680,6 +690,8 @@ export class AppComponent implements OnInit {
 					this.form.description = this.incident.description;
 					this.form.customerType = this.incident.customerType;
 					this.form.customerCount = this.incident.customerCount;
+					this.form.internalTeam = this.incident.internalTeam;
+					this.form.zendeskTicket = this.incident.zendeskTicket;
 					this.form.priorityID = this.incident.priority.id;
 					this.form.startedAt = this.incident.startedAt;
 					this.form.videoLink = this.incident.videoLink;

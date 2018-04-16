@@ -36,6 +36,8 @@ export interface Incident {
 	description: string;
 	customerType: string;
 	customerCount: string;
+	internalTeam: string;
+	zendeskTicket: string;
 	priority: Priority;
 	status: Status;
 	startedAt: Date;
@@ -198,6 +200,8 @@ export class IncidentService {
 			description: "",
 			customerType: "",
 			customerCount: "",
+			internalTeam: "",
+			zendeskTicket: "",
 			priority: priorities[ 0 ],
 			status: statuses[ 0 ],
 			startedAt: new Date(),
@@ -249,6 +253,8 @@ export class IncidentService {
 			description: dto.description,
 			customerType: dto.customerType,
 			customerCount: dto.customerCount,
+			internalTeam: dto.internalTeam,
+			zendeskTicket: dto.zendeskTicket,
 			priority: _.find( priorities, [ "id", dto.priorityID ] ),
 			status: _.find( statuses, [ "id", dto.statusID ] ),
 			startedAt: new Date( dto.startedAt ),
@@ -292,6 +298,8 @@ export class IncidentService {
 			description: incident.description,
 			customerType: incident.customerType,
 			customerCount: incident.customerCount,
+			internalTeam: incident.internalTeam,
+			zendeskTicket: incident.zendeskTicket,
 			priorityID: incident.priority.id,
 			statusID: incident.status.id,
 			startedAt: incident.startedAt.getTime(),
