@@ -1,12 +1,19 @@
 
 // Import the core angular services.
 import { _ } from "./lodash-extended";
+import { Injectable } from "@angular/core";
+
+// ----------------------------------------------------------------------------------- //
+// ----------------------------------------------------------------------------------- //
 
 export interface Quote {
 	author: string;
 	excerpt: string;
 }
 
+@Injectable({
+	providedIn: "root"
+})
 export class QuoteService {
 
 	private quotes: Quote[];

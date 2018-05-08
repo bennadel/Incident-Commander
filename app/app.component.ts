@@ -4,7 +4,7 @@ import { Component } from "@angular/core";
 import { Location } from "@angular/common";
 import { OnInit } from "@angular/core";
 import { PopStateEvent } from "@angular/common";
-import { Subscription } from "rxjs/Subscription";
+import { Subscription } from "rxjs";
 import { Title } from "@angular/platform-browser";
 
 // Import the application services.

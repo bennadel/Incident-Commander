@@ -1,10 +1,8 @@
 
 // Import the core angular services.
 import { Injectable } from "@angular/core";
-import { Observable } from "rxjs/Observable";
-
-// Import these modules for their side-effects.
-import "rxjs/add/operator/map";
+import { map as rxjsMap } from "rxjs/operators";
+import { Observable } from "rxjs";
 
 // Import the application components and services.
 import { IncidentDTO } from "./incident.gateway";
@@ -46,7 +44,9 @@ export interface Incident {
 	updates: Update[];
 }
 
-@Injectable()
+@Injectable({
+	providedIn: "root"
+})
 export class IncidentService {
 
 	private incidentGateway: IncidentGateway;
@@ -101,12 +101,14 @@ export class IncidentService {
 		// we need to map the DTOs into actual Incident objects.
 		var stream = this.incidentGateway
 			.readIncidentAsStream( id )
-			.map(
-				( dto: IncidentDTO ) : Incident => {
+			.pipe(
+				rxjsMap(
+					( dto: IncidentDTO ) : Incident => {
 
-					return( this.fromTransferObject( dto ) );
+						return( this.fromTransferObject( dto ) );
 
-				}
+					}
+				)
 			)
 		;
 

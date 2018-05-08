@@ -1,11 +1,15 @@
 
 // Import the core angular services.
 import firebase = require( "firebase/app" );
-import { Observable } from "rxjs/Observable";
-import { Observer } from "rxjs/Observer";
+import { Injectable } from "@angular/core";
+import { Observable } from "rxjs";
+import { Observer } from "rxjs";
 
 // Import these libraries for their side-effects.
 import "firebase/database";
+
+// ----------------------------------------------------------------------------------- //
+// ----------------------------------------------------------------------------------- //
 
 export interface UpdateDTO {
 	id: number;
@@ -31,6 +35,9 @@ export interface IncidentDTO {
 	updates?: UpdateDTO[]; // Optional because Firebase doesn't return empty Arrays.
 }
 
+@Injectable({
+	providedIn: "root"
+})
 export class IncidentGateway {
 
 	private firebaseApp: firebase.app.App;

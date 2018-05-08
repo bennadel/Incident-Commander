@@ -1,4 +1,13 @@
 
+// Import the core angular services.
+import { Injectable } from "@angular/core";
+
+// ----------------------------------------------------------------------------------- //
+// ----------------------------------------------------------------------------------- //
+
+@Injectable({
+	providedIn: "root"
+})
 export class CacheService {
 
 	public keyPrefix: string;

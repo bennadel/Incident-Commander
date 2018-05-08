@@ -10,12 +10,7 @@ import { Title } from "@angular/platform-browser";
 
 // Import the application components and services.
 import { AppComponent } from "./app.component";
-import { CacheService } from "./cache.service";
 import { DateTimeComponent } from "./date-time.component";
-import { IncidentGateway } from "./incident.gateway";
-import { IncidentService } from "./incident.service";
-import { QuoteService } from "./quote.service";
-import { SlackSerializer } from "./slack-serializer";
 import { TimelineDatePipe } from "./timeline-date.pipe";
 import { TimelineSortPipe } from "./timeline-sort.pipe";
 import { TimelineTimePipe } from "./timeline-time.pipe";
@@ -31,20 +26,12 @@ import { TimelineTimePipe } from "./timeline-time.pipe";
 		TimelineTimePipe
 	],
 	providers: [
-		// Core providers.
 		Location,
 		{
 			provide: LocationStrategy,
 			useClass: HashLocationStrategy
 		},
-		Title,
-
-		// Application providers.
-		CacheService,
-		IncidentGateway,
-		IncidentService,
-		QuoteService,
-		SlackSerializer
+		Title
 	]
 })
 export class AppModule {

@@ -1,11 +1,20 @@
 
+// Import the core angular services.
+import { Injectable } from "@angular/core";
+
 // Import the application services.
 import { Incident } from "./incident.service";
 import { Timezone } from "./timezones";
 
+// ----------------------------------------------------------------------------------- //
+// ----------------------------------------------------------------------------------- //
+
 var WEEKDAYS = [ "Sun", "Mon", "Tue", "Wed", "Thr", "Fri", "Sat" ];
 var MONTHS = [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ];
 
+@Injectable({
+	providedIn: "root"
+})
 export class SlackSerializer {
 
 	// I serialize the given incident for use in a Slack message.

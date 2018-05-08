@@ -16,6 +16,5 @@ import "lodash/last";
 import "lodash/random";
 import "lodash/range";
 import "lodash/without";
-import "rxjs/add/operator/map";
-import "rxjs/Observable";
-import "rxjs/Observer";
+import "rxjs";
+import "rxjs/operators";
