@@ -293,9 +293,10 @@
 						</select>
 
 						<textarea
+							#inp
 							name="updateDescription"
 							[(ngModel)]="form.updateDescription"
-							(keydown.meta.Enter)="addUpdate()"
+							(keydown.meta.Enter)="inp.select();addUpdate()"
 							class="add-update__content">
 						</textarea>
 
@@ -487,6 +488,14 @@
 		</footer>
 
 	</div>
+
+	<ng-template [ngIf]="globalInsight">
+
+		<div class="global-insight">
+			{{ globalInsight }}
+		</div>
+
+	</ng-template>
 
 </ng-template>
 <!-- END: Incident selected and fully loaded. -->

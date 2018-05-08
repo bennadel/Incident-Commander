@@ -492,3 +492,33 @@ span.local-time-note {
 		}
 	}
 }
+
+
+@keyframes global-insight-enter {
+	from {
+		top: -50px ;
+	}
+    
+    to {
+    	top: 10px ;
+    }
+}
+
+.global-insight {
+	animation-duration: 500ms ;
+	animation-name: global-insight-enter ;
+	background-color: #0082E2 ;
+	border-radius: 5px 5px 5px 5px ;
+	box-shadow: 1px 3px 4px fade( #000000, 30% ) ;
+	color: #FFFFFF ;
+	font-size: 14px ;
+	font-weight: 600 ;
+	left: 50% ;
+	padding: 10px 20px 10px 20px ;
+	position: fixed ;
+	top: 10px ;
+	transform: translateX( -50% ) ;
+		-moz-transform: translateX( -50% ) ;
+		-webkit-transform: translateX( -50% ) ;
+	z-index: 2 ;
+}

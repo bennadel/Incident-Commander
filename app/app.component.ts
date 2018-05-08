@@ -9,6 +9,7 @@ import { Title } from "@angular/platform-browser";
 
 // Import the application services.
 import { CacheService } from "./cache.service";
+import { ClipboardService } from "./clipboard.service";
 import { Incident } from "./incident.service";
 import { IncidentService } from "./incident.service";
 import { Priority } from "./incident.service";
@@ -57,6 +58,7 @@ export class AppComponent implements OnInit {
 		slackTimezone: Timezone;
 		slack: string;
 	};
+	public globalInsight: string;
 	public incident: Incident;
 	public incidentID: string;
 	public priorities: Priority[];
@@ -66,6 +68,7 @@ export class AppComponent implements OnInit {
 	public updateSortDirection: "asc" | "desc";
 
 	private cacheService: CacheService;
+	private clipboardService: ClipboardService;
 	private incidentService: IncidentService;
 	private location: Location;
 	private quoteService: QuoteService;
@@ -77,6 +80,7 @@ export class AppComponent implements OnInit {
 	// I initialize the app component.
 	constructor( 
 		cacheService: CacheService,
+		clipboardService: ClipboardService,
 		incidentService: IncidentService,
 		location: Location,
 		quoteService: QuoteService,
@@ -86,6 +90,7 @@ export class AppComponent implements OnInit {
 
 		// Store injected properties.
 		this.cacheService = cacheService;
+		this.clipboardService = clipboardService;
 		this.incidentService = incidentService;
 		this.location = location;
 		this.quoteService = quoteService;
@@ -133,6 +138,8 @@ export class AppComponent implements OnInit {
 		
 		this.quote = this.quoteService.getRandomQuote();
 
+		this.globalInsight = "";
+
 	}
 
 
@@ -176,6 +183,21 @@ export class AppComponent implements OnInit {
 
 		// Finally, persist the incident changes.
 		this.incidentService.saveIncident( this.incident );
+
+		// For convenience, copy the slack message directly to the user's clipboard.
+		this.clipboardService.copy( this.form.slack ).then(
+			( value: string ) : void => {
+
+				this.setGlobalInsight( "Slack message copied to clipboard." );
+
+			},
+			( error: any ) : void => {
+
+				console.warn( "Unable to copy value to clipboard." );
+				console.error( error );
+
+			}
+		);
 
 	}
 
@@ -602,6 +624,23 @@ export class AppComponent implements OnInit {
 		var cachedVersion = this.cacheService.get( "version" );
 
 		return( cachedVersion || "general" );
+
+	}
+
+
+	// I set the global insight message, then clear it after several seconds.
+	private setGlobalInsight( message: string ) : void {
+
+		this.globalInsight = message;
+
+		setTimeout(
+			() => {
+
+				this.globalInsight = "";
+
+			},
+			4000
+		);
 
 	}
 
