@@ -293,10 +293,9 @@
 						</select>
 
 						<textarea
-							#inp
 							name="updateDescription"
 							[(ngModel)]="form.updateDescription"
-							(keydown.meta.Enter)="inp.select();addUpdate()"
+							(keydown.meta.Enter)="addUpdate()"
 							class="add-update__content">
 						</textarea>
 
