@@ -23,7 +23,10 @@ module.exports = {
 		path: path.join( __dirname, "build" )
 	},
 	resolve: {
-		extensions: [ ".ts", ".js" ]
+		extensions: [ ".ts", ".js" ],
+		alias: {
+			"~/app": path.resolve( __dirname, "app" )
+		}
 	},
 	module: {
 		rules: [

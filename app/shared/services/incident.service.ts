@@ -10,6 +10,9 @@ import { IncidentGateway } from "./incident.gateway";
 import { UpdateDTO } from "./incident.gateway";
 import { _ } from "./lodash-extended";
 
+// ----------------------------------------------------------------------------------- //
+// ----------------------------------------------------------------------------------- //
+
 export interface Status {
 	id: string;
 	description: string;

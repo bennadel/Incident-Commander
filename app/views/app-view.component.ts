@@ -8,28 +8,28 @@ import { Subscription } from "rxjs";
 import { Title } from "@angular/platform-browser";
 
 // Import the application services.
-import { CacheService } from "./cache.service";
-import { ClipboardService } from "./clipboard.service";
-import { Incident } from "./incident.service";
-import { IncidentService } from "./incident.service";
-import { Priority } from "./incident.service";
-import { Quote } from "./quote.service";
-import { QuoteService } from "./quote.service";
-import { SlackSerializer } from "./slack-serializer";
-import { Status } from "./incident.service";
-import { Timezone } from "./timezones";
-import { timezones } from "./timezones";
-import { Update } from "./incident.service";
-import { _ } from "./lodash-extended";
+import { CacheService } from "~/app/shared/services/cache.service";
+import { ClipboardService } from "~/app/shared/services/clipboard.service";
+import { Incident } from "~/app/shared/services/incident.service";
+import { IncidentService } from "~/app/shared/services/incident.service";
+import { Priority } from "~/app/shared/services/incident.service";
+import { Quote } from "~/app/shared/services/quote.service";
+import { QuoteService } from "~/app/shared/services/quote.service";
+import { SlackSerializer } from "~/app/shared/services/slack-serializer";
+import { Status } from "~/app/shared/services/incident.service";
+import { Timezone } from "~/app/shared/services/timezones";
+import { timezones } from "~/app/shared/services/timezones";
+import { Update } from "~/app/shared/services/incident.service";
+import { _ } from "~/app/shared/services/lodash-extended";
 
 var NEW_INCIDENT_ID_OVERLOAD = "new";
 
 @Component({
 	selector: "my-app",
-	styleUrls: [ "./app.component.less" ],
-	templateUrl: "./app.component.htm"
+	styleUrls: [ "./app-view.component.less" ],
+	templateUrl: "./app-view.component.htm"
 })
-export class AppComponent implements OnInit {
+export class AppViewComponent implements OnInit {
 
 	public duration: {
 		hours: number;

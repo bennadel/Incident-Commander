@@ -4,7 +4,10 @@ import { Pipe } from "@angular/core";
 import { PipeTransform } from "@angular/core";
 
 // Import the application services.
-import { Update } from "./incident.service";
+import { Update } from "../services/incident.service";
+
+// ----------------------------------------------------------------------------------- //
+// ----------------------------------------------------------------------------------- //
 
 @Pipe({
 	name: "timelineSort",

@@ -6,7 +6,10 @@ import { EventEmitter } from "@angular/core";
 import { SimpleChanges } from "@angular/core";
 
 // Import the application services.
-import { _ } from "./lodash-extended";
+import { _ } from "../../services/lodash-extended";
+
+// ----------------------------------------------------------------------------------- //
+// ----------------------------------------------------------------------------------- //
 
 interface DateOption {
 	id: number;
