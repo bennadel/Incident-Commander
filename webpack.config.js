@@ -106,8 +106,8 @@ module.exports = {
 			hash: true
 		}),
 		// I compact the JavaScript content.
-		new webpack.optimize.UglifyJsPlugin({
-			keep_fnames: true
-		})
+		// new webpack.optimize.UglifyJsPlugin({
+		// 	keep_fnames: true
+		// })
 	]
 };
