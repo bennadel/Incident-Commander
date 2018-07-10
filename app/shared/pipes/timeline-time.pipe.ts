@@ -17,7 +17,7 @@ export class TimelineTimePipe implements PipeTransform {
 
 		var hours = value.getHours();
 		var minutes = value.getMinutes();
-		var timezone = value.toTimeString().match( /\((\w+)\)/ )[ 1 ];
+		var timezone = this.getTimezone( value );
 		var period = ( hours < 12 )
 			? "AM"
 			: "PM"
@@ -27,6 +27,32 @@ export class TimelineTimePipe implements PipeTransform {
 		var normalizedMinuets = ( "0" + minutes ).slice( -2 );
 
 		return( `${ normalizedHours }:${ normalizedMinuets } ${ period } ${ timezone }` );
+
+	}
+
+	// ---
+	// PRIVATE METHODS.
+	// ---
+
+	// I get the timezone abbreviation from the given date.
+	private getTimezone( value: Date ) : string {
+
+		var timezone = value.toTimeString().match( /\(([\w\s-]+)\)/ )[ 1 ];
+
+		// The timezone portion of the time-string is expected to be an abbreviation
+		// like "EDT". However, on some computers, that value is being reported as a long
+		// string, like "Eastern Daylight Time". In those cases, let's convert the long
+		// string to an abbreviation.
+		if ( timezone.includes( " " ) || timezone.includes( "-" ) ) {
+
+			timezone = timezone
+				.match( /\b[a-z]/gi ) // Start of word-boundary letters.
+				.join( "" )
+			;
+
+		}
+
+		return( timezone );
 
 	}
 
