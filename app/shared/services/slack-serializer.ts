@@ -61,7 +61,7 @@ export class SlackSerializer {
 
 		}
 
-		parts.push( `*Timeline*: \`https://bennadel.github.io/Incident-Commander/#${ incident.id }\` ` );
+		parts.push( `*Timeline*: \`https://www.incident-commander.com/#${ incident.id }\` ` );
 
 		var visibleUpdates = incident.updates.slice( -updateLimit );
 
