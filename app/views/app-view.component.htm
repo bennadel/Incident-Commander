@@ -141,35 +141,19 @@
 						<div class="form__field-body customers">
 
 							<div class="customers__item">
-								<input type="text" name="customerType" list="customerTypeList" [(ngModel)]="form.customerType" (ngModelChange)="applyForm()" class="customers__input" />
+								<input type="text" name="customerType" [(ngModel)]="form.customerType" (ngModelChange)="applyForm()" class="customers__input" />
 								<div class="customers__note">
 									<span class="customers__label">Type of Customers:</span>
 									<span class="customers__values">None | Internal | EA | MT | PC</span>
 								</div>
-								
-								<datalist id="customerTypeList">
-									<option>None</option>
-									<option>Internal</option>
-									<option>EA</option>
-									<option>MT</option>
-									<option>MT, PC</option>
-									<option>PC</option>
-								</datalist>
 							</div>
 
 							<div class="customers__item">
-								<input type="text" name="customerCount" list="customerCountList" [(ngModel)]="form.customerCount" (ngModelChange)="applyForm()" class="customers__input" />
+								<input type="text" name="customerCount" [(ngModel)]="form.customerCount" (ngModelChange)="applyForm()" class="customers__input" />
 								<div class="customers__note">
 									<span class="customers__label">Number Affected:</span>
 									<span class="customers__values">Few | Some | Many | All</span>
 								</div>
-
-								<datalist id="customerCountList">
-									<option>Few</option>
-									<option>Some</option>
-									<option>Many</option>
-									<option>All</option>
-								</datalist>
 							</div>
 
 						</div>
