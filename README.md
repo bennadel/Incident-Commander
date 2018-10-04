@@ -39,8 +39,8 @@ updates into a tightly-formatted Slack message that I can quickly copy-and-paste
   then, post a more comprehensive, more _readable_ version at the end.
 
 
-[bennadel]: http://www.bennadel.com
+[bennadel]: https://www.bennadel.com
 [googleplus]: https://plus.google.com/108976367067760160494?rel=author
 [invisionapp]: https://www.bennadel.com/invision/co-founder.htm
-[app]: https://bennadel.github.io/Incident-Commander/
+[app]: https://www.incident-commander.com/
 [firebase]: https://firebase.google.com/
