@@ -4,6 +4,7 @@ import { NgModule } from "@angular/core";
 
 // Import the application components and services.
 import { AppViewComponent } from "./app-view.component";
+import { IncidentComponent } from "./directives/incident/incident.component";
 import { SharedModule } from "~/app/shared/shared.module";
 
 // ----------------------------------------------------------------------------------- //
@@ -14,7 +15,8 @@ import { SharedModule } from "~/app/shared/shared.module";
 		SharedModule
 	],
 	declarations: [
-		AppViewComponent
+		AppViewComponent,
+		IncidentComponent
 	]
 })
 export class AppViewModule {
