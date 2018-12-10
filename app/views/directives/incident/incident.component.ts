@@ -16,6 +16,23 @@ import { _ } from "~/app/shared/services/lodash-extended";
 // ----------------------------------------------------------------------------------- //
 // ----------------------------------------------------------------------------------- //
 
+export interface ChangeEvent {
+	description: string;
+	version: string;
+	customerType: string;
+	customerCount: string;
+	internalTeam: string;
+	zendeskTicket: string;
+	priority: Priority;
+	startedAt: Date | null;
+	videoLink: string;
+	slackSize: number;
+	slackFormat: string;
+	slackTimezone: Timezone;
+}
+
+
+
 interface Duration {
 	hours: number;
 	minutes: number;
@@ -50,15 +67,16 @@ interface EditForm {
 	selector: "app-incident",
 	inputs: [
 		"incident",
+		"slackMessage",
 		"timezones",
 		"priorities",
-		"statuses",
-		"version"
+		"statuses"
 	],
 	outputs: [
-		"updateSaveEvents: updateSave",
+		"incidentChangeEvents: change",
+		"updateAddEvents: updateAdd",
 		"updateDeleteEvents: updateDelete",
-		"versionSelectEvents: versionSelect"
+		"updateSaveEvents: updateSave"
 	],
 	styleUrls: [ "./incident.component.less" ],
 	templateUrl: "./incident.component.htm"
@@ -70,11 +88,12 @@ export class IncidentComponent implements OnChanges {
 	public incident?: Incident;
 	public intakeForm?: IntakeForm;
 	public priorities?: Priority[];
+	public slackMessage?: string;
 	public statuses?: Status[];
 	public timezones?: Timezone[];
+	public updateAddEvents: EventEmitter<Update>;
 	public updateDeleteEvents: EventEmitter<Update>;
 	public updateSaveEvents: EventEmitter<Update>;
-	public versionSelectEvents: EventEmitter<string>;
 
 	// I initialize the incident component.
 	constructor() {
@@ -87,11 +106,12 @@ export class IncidentComponent implements OnChanges {
 		this.incident = null;
 		this.intakeForm = null;
 		this.priorities = null;
+		this.slackMessage = null;
 		this.statuses = null;
 		this.timezones = null;
+		this.updateAddEvents = new EventEmitter();
 		this.updateDeleteEvents = new EventEmitter();
 		this.updateSaveEvents = new EventEmitter();
-		this.versionSelectEvents = new EventEmitter();
 
 	}
 
@@ -109,14 +129,14 @@ export class IncidentComponent implements OnChanges {
 
 		}
 
-		var update = {
+		this.updateAddEvents.emit({
 			id: Date.now(),
 			status: _.find( this.statuses, [ "id", this.intakeForm.updateStatusID ] ),
 			createdAt: new Date(),
 			description: this.intakeForm.updateDescription
-		};
+		});
 
-		// TODO.....
+		this.intakeForm.updateDescription = "";
 
 	}
 
@@ -169,6 +189,12 @@ export class IncidentComponent implements OnChanges {
 
 		}
 
+		if ( ! this.slackMessage ) {
+
+			throw( new Error( "Required input [slackMessage] has not been provided." ) );
+
+		}
+
 		if ( ! this.priorities ) {
 
 			throw( new Error( "Required input [priorities] has not been provided." ) );
@@ -191,11 +217,29 @@ export class IncidentComponent implements OnChanges {
 
 		if ( changes.incident ) {
 
-			var slackMessage = ( ( this.intakeForm && this.intakeForm.slack ) || "" );
-
 			this.intakeForm = {
-
-
+				description: this.incident.description,
+				version: this.incident.version,
+				customerType: this.incident.customerType,
+				customerCount: this.incident.customerCount,
+				internalTeam: this.incident.internalTeam,
+				zendeskTicket: this.incident.zendeskTicket,
+				priorityID: this.incident.priority.id,
+				startedAt: this.incident.startedAt,
+				videoLink: this.incident.videoLink,
+				updateStatusID: this.incident.updates.length
+					? _.last( this.incident.updates ).status.id
+					: this.statuses[ 0 ].id,
+				updateDescription: "",
+				slackSize: 1,
+				slackFormat: "",
+				slackTimezone: _.find(
+					this.timezones,
+					{
+						id: this.incident.timezoneID
+					}
+				),
+				slack: this.slackMessage
 			};
 
 		}
@@ -206,12 +250,10 @@ export class IncidentComponent implements OnChanges {
 	// I save the changes to the currently-selected Update.
 	public saveUpdateChanges() : void {
 
-		var update = this.editForm.update;
-
 		this.updateSaveEvents.emit({
-			id: update.id,
+			id: this.editForm.update.id,
 			status: _.find( this.statuses, [ "id", this.editForm.statusID ] ),
-			createdAt: ( this.editForm.createdAt || update.createdAt ),
+			createdAt: ( this.editForm.createdAt || this.editForm.update.createdAt ),
 			description: this.editForm.description
 		});
 
@@ -223,7 +265,8 @@ export class IncidentComponent implements OnChanges {
 	// I switch over to the given version of the intake form.
 	public useVersion( version: string ) : void {
 
-		this.versionSelectEvents.emit( version );
+		this.intakeForm.version = version;
+		this.applyForm();
 
 	}
 
