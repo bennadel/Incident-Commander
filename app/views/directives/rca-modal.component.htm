@@ -1,0 +1,27 @@
+
+<a (click)="close()" class="close">
+	<span class="close__icon">
+		&times;
+	</span>
+</a>
+
+<header class="header">
+
+	<h2 class="header__title">
+		Root Cause Analysis (RCA) Preparation
+	</h2>
+
+	<div class="header__description">
+		This RCA template is based on the current best-practices of the <strong>Rainbow Team</strong>.
+		If you would like any changes, please contact <code>#team-rainbow</code>.
+	</div>
+
+</header>
+
+<textarea
+	#writeUp
+	[value]="value"
+	(click)="writeUp.select();"
+	readonly
+	class="write-up">
+</textarea>

@@ -116,6 +116,12 @@
 								[class.versions__version--on]="( form.version === 'invision' )">
 								InVision Version
 							</span>
+							<span
+								*ngIf="( form.version === 'invision' )"
+								(click)="prepareRCA()"
+								class="versions__prepare">
+								Prepare Root Cause Analysis (RCA)
+							</span>
 						</div>
 
 					</div>
@@ -433,6 +439,12 @@
 			</div>
 
 		</footer>
+
+		<ng-template [ngIf]="isShowingRCA">
+
+			<rca-modal [value]="rcaWriteup" (close)="closeRCA()"></rca-modal>
+
+		</ng-template>
 
 	</div>
 

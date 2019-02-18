@@ -15,6 +15,7 @@ import { IncidentService } from "~/app/shared/services/incident.service";
 import { Priority } from "~/app/shared/services/incident.service";
 import { Quote } from "~/app/shared/services/quote.service";
 import { QuoteService } from "~/app/shared/services/quote.service";
+import { RcaSerializer } from "~/app/shared/services/rca-serializer";
 import { SlackSerializer } from "~/app/shared/services/slack-serializer";
 import { Status } from "~/app/shared/services/incident.service";
 import { Timezone } from "~/app/shared/services/timezones";
@@ -61,8 +62,10 @@ export class AppViewComponent implements OnInit {
 	public globalInsight: string;
 	public incident: Incident;
 	public incidentID: string;
+	public isShowingRCA: boolean;
 	public priorities: Priority[];
 	public quote: Quote;
+	public rcaWriteup: string;
 	public statuses: Status[];
 	public timezones: Timezone[];
 	public updateSortDirection: "asc" | "desc";
@@ -72,6 +75,7 @@ export class AppViewComponent implements OnInit {
 	private incidentService: IncidentService;
 	private location: Location;
 	private quoteService: QuoteService;
+	private rcaSerializer: RcaSerializer;
 	private slackSerializer: SlackSerializer;
 	private subscription: Subscription;
 	private title: Title;
@@ -84,6 +88,7 @@ export class AppViewComponent implements OnInit {
 		incidentService: IncidentService,
 		location: Location,
 		quoteService: QuoteService,
+		rcaSerializer: RcaSerializer,
 		slackSerializer: SlackSerializer,
 		title: Title
 		) {
@@ -94,6 +99,7 @@ export class AppViewComponent implements OnInit {
 		this.incidentService = incidentService;
 		this.location = location;
 		this.quoteService = quoteService;
+		this.rcaSerializer = rcaSerializer;
 		this.slackSerializer = slackSerializer;
 		this.title = title;
 
@@ -101,6 +107,7 @@ export class AppViewComponent implements OnInit {
 		this.statuses = this.incidentService.getStatuses();
 		this.incident = null;
 		this.incidentID = null;
+		this.isShowingRCA = false;
 		this.subscription = null;
 		this.updateSortDirection = "desc";
 
@@ -137,16 +144,15 @@ export class AppViewComponent implements OnInit {
 		};
 		
 		this.quote = this.quoteService.getRandomQuote();
+		this.rcaWriteup = "";
 
 		this.globalInsight = "";
 
 	}
 
-
 	// ---
 	// PUBLIC METHODS.
 	// ---
-
 
 	// I add a new Update to the incident.
 	public addUpdate() : void {
@@ -245,6 +251,14 @@ export class AppViewComponent implements OnInit {
 	}
 
 
+	// I close the RCA preparation modal.
+	public closeRCA() : void {
+
+		this.isShowingRCA = false;
+
+	}
+
+
 	// I delete the currently active incident.
 	public deleteIncident() : void {
 
@@ -330,6 +344,15 @@ export class AppViewComponent implements OnInit {
 		);
 
 		this.setupDurationInterval();
+
+	}
+
+
+	// I render the incident in a format that is aligned with the current RCA process.
+	public prepareRCA() : void {
+
+		this.rcaWriteup = this.rcaSerializer.serialize( this.incident, this.form.slackTimezone );
+		this.isShowingRCA = true;
 
 	}
 
