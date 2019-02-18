@@ -39,16 +39,6 @@ module.exports = ( env, argv ) => {
 		// separation is handled by default. You just include your entry bundle and 
 		// Webpack's splitChunks optimization DEFAULTS will automatically separate out
 		// modules that are in the "node_modules" folder.
-		// --
-		// CAUTION: The ORDER OF THESE KEYS is meaningful "by coincidence." Technically,
-		// the order of keys in a JavaScript object shouldn't make a difference because,
-		// TECHNICALLY, the JavaScript language makes to guarantees around key ordering.
-		// However, from a practical standpoint, JavaScript keys are iterated over in the
-		// same order in which they were defined (especially in V8). By putting the
-		// POLYFILL bundle first in the object definition, it will cause the polyfill
-		// bundle to be injected into the generated HTML file first. If you don't want to
-		// rely on this ordering - or, if it breaks for you anyway - you can use the
-		// HtmlWebpackPlugin (see: chunksSortMode) to explicitly order chunks. 
 		entry: {
 			main: "./app/main.ts"
 			// NOTE: I'm currently including the polyfill directly in the main.ts file.
