@@ -61,6 +61,7 @@ export class AppViewComponent implements OnInit {
 	public globalInsight: string;
 	public incident: Incident;
 	public incidentID: string;
+	public isShowingRCA: boolean;
 	public priorities: Priority[];
 	public quote: Quote;
 	public statuses: Status[];
@@ -101,6 +102,7 @@ export class AppViewComponent implements OnInit {
 		this.statuses = this.incidentService.getStatuses();
 		this.incident = null;
 		this.incidentID = null;
+		this.isShowingRCA = false;
 		this.subscription = null;
 		this.updateSortDirection = "desc";
 
@@ -142,11 +144,9 @@ export class AppViewComponent implements OnInit {
 
 	}
 
-
 	// ---
 	// PUBLIC METHODS.
 	// ---
-
 
 	// I add a new Update to the incident.
 	public addUpdate() : void {
@@ -245,6 +245,14 @@ export class AppViewComponent implements OnInit {
 	}
 
 
+	// I close the RCA preparation modal.
+	public closeRCA() : void {
+
+		this.isShowingRCA = false;
+
+	}
+
+
 	// I delete the currently active incident.
 	public deleteIncident() : void {
 
@@ -330,6 +338,14 @@ export class AppViewComponent implements OnInit {
 		);
 
 		this.setupDurationInterval();
+
+	}
+
+
+	// I render the incident in a format that is aligned with the current RCA process.
+	public prepareRCA() : void {
+
+		this.isShowingRCA = true;
 
 	}
 

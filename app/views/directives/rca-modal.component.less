@@ -1,0 +1,74 @@
+
+:host {
+	align-items: center ;
+	background-color: fade( #ffffff, 95% ) ;
+	bottom: 0px ;
+	display: flex ;
+	flex-direction: column ;
+	left: 0px ;
+	overflow: auto ;
+	padding: 30px 0px 30px 0px ;
+	position: fixed ;
+	right: 0px ;
+	top: 0px ;
+}
+
+.header {
+	border-bottom: 4px solid #333333 ;
+	margin-bottom: 30px ;
+	width: 1100px ;
+
+	&__title {
+		font-size: 30px ;
+		font-weight: 600 ;
+		line-height: 34px ;
+		margin: 0px 0px 13px 0px ;
+	}
+
+	&__description {
+		color: #666666 ;
+		font-size: 16px ;
+		font-weight: 300 ;
+		line-height: 22px ;
+		margin-bottom: 27px ;
+	}
+}
+
+.write-up {
+	border: 1px dashed #cccccc ;
+	border-radius: 7px 7px 7px 7px ;
+	box-sizing: border-box ;
+	display: block ;
+	flex: 1 1 auto ;
+	font-family: monospace ;
+	font-size: 16px ;
+	font-weight: 300 ;
+	line-height: 23px ;
+	padding: 20px 20px 20px 20px ;
+	width: 1100px ;
+}
+
+.close {
+	background-color: #4993c7 ;
+	border-radius: 40px 40px 40px 40px ;
+	cursor: pointer ;
+	display: flex ;
+	height: 40px ;
+	position: absolute ;
+	right: 26px ;
+	top: 23px ;
+	transition: background-color 300ms ease ;
+	width: 40px ;
+
+	&__icon {
+		color: #ffffff ;
+		font-size: 22px ;
+		font-weight: 400 ;
+		line-height: 22px ;
+		margin: auto ;
+	}
+
+	&:hover {
+		background-color: #3a86bb ;
+	}
+}
