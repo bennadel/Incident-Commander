@@ -1,5 +1,6 @@
 
 # Compiled files.
+/dist
 /out-tsc
 /tmp
 
