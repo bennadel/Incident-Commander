@@ -1,10 +1,10 @@
 
 // Import the core angular services.
-import find = require( "lodash/find" );
-import last = require( "lodash/last" );
-import random = require( "lodash/random" );
-import range = require( "lodash/range" );
-import without = require( "lodash/without" );
+import { find } from "lodash";
+import { last } from "lodash";
+import { random } from "lodash";
+import { range } from "lodash";
+import { without } from "lodash";
 
 // ----------------------------------------------------------------------------------- //
 // ----------------------------------------------------------------------------------- //

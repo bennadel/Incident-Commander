@@ -1,6 +1,6 @@
 
 // Import the core angular services.
-import firebase = require( "firebase/app" );
+import * as firebase from "firebase";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { Observer } from "rxjs";

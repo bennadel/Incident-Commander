@@ -16,7 +16,7 @@ import { OnInit } from "@angular/core";
 		"(document:keydown.escape)": "close()"
 	},
 	styleUrls: [ "./rca-modal.component.less" ],
-	templateUrl: "./rca-modal.component.htm"
+	templateUrl: "./rca-modal.component.html"
 })
 export class RcaModalComponent implements OnInit, OnDestroy {
 
