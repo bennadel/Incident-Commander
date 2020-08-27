@@ -28,7 +28,7 @@ var NEW_INCIDENT_ID_OVERLOAD = "new";
 @Component({
 	selector: "my-app",
 	styleUrls: [ "./app-view.component.less" ],
-	templateUrl: "./app-view.component.htm"
+	templateUrl: "./app-view.component.html"
 })
 export class AppViewComponent implements OnInit {
 

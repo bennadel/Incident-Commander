@@ -33,6 +33,10 @@ export class TimelineSortPipe implements PipeTransform {
 
 						return( 1 );
 
+					} else {
+
+						return( 0 );
+
 					}
 
 				// Sort descending.
@@ -45,6 +49,10 @@ export class TimelineSortPipe implements PipeTransform {
 					} else if ( a.createdAt < b.createdAt ) {
 
 						return( 1 );
+
+					} else {
+
+						return( 0 );
 
 					}
 

@@ -1,27 +1,39 @@
 {
+	"angularCompilerOptions": {
+		"strictInjectionParameters": true,
+		"strictTemplates": true
+	},
+	"compileOnSave": false,
 	"compilerOptions": {
-		"baseUrl": "",
-		"emitDecoratorMetadata": true,
+		"baseUrl": "./",
+		"declaration": false,
+		"downlevelIteration": true,
 		"experimentalDecorators": true,
+		"forceConsistentCasingInFileNames": true,
+		"importHelpers": true,
 		"lib": [
-			"DOM",
-			"ES6"
+			"es2018",
+			"dom"
 		],
-		"module": "commonjs",
+		"module": "es2020",
 		"moduleResolution": "node",
-		"noImplicitAny": true,
+		"noFallthroughCasesInSwitch": true,
+		"noImplicitReturns": true,
+		"outDir": "./dist/out-tsc",
 		"paths": {
-			"~/app/*": [ "app/*" ]
+			"~/app/*": [ "src/app/*" ]
 		},
-		"pretty": true,
 		"removeComments": false,
 		"sourceMap": true,
-		"strictNullChecks": false,
-		"strictPropertyInitialization": false,
-		"suppressImplicitAnyIndexErrors": true,
-		"target": "es5",
-		"types": [
-			"node"
-		]
-	}
+		"strict": false,
+		"target": "es2015",
+		"types": []
+	},
+	"files": [
+		"src/main.ts",
+		"src/polyfills.ts"
+	],
+	"include": [
+		"src/**/*.d.ts"
+	]
 }

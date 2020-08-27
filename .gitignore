@@ -1,2 +1,11 @@
 
-node_modules/
+# Compiled files.
+/dist
+/out-tsc
+/tmp
+
+# Build-time dependencies.
+/node_modules
+
+# Random junk.
+.DS_Store
