@@ -1,7 +1,7 @@
 
 <!-- BEGIN: No incident selected. -->
 <ng-template [ngIf]="! incidentID">
-	
+
 	<!-- If there is no incident ID, then prompt the user to create one. -->
 	<div class="app-intro">
 
@@ -16,14 +16,14 @@
 	</div>
 
 	<div class="app-caution">
-		
+
 		<strong class="app-caution__label">
 			Caution
 		</strong>
-		
+
 		<span class="app-caution__description">
-			All Incident Commander data is stored in a 
-			<a href="https://firebase.googleblog.com/2015/02/the-2120-ways-to-ensure-unique_68.html">public Firebase database</a> 
+			All Incident Commander data is stored in a
+			<a href="https://firebase.googleblog.com/2015/02/the-2120-ways-to-ensure-unique_68.html">public Firebase database</a>
 			&mdash; do not store sensitive information in your incident.
 		</span>
 
@@ -49,7 +49,7 @@
 <ng-template [ngIf]="( incidentID && incident )">
 
 	<div class="app-main">
-			
+
 		<header class="app-header">
 
 			<h1 class="app-header__title">
@@ -150,7 +150,7 @@
 								<input type="text" name="customerType" [(ngModel)]="form.customerType" (ngModelChange)="applyForm()" class="customers__input" />
 								<div class="customers__note">
 									<span class="customers__label">Type of Customers:</span>
-									<span class="customers__values">None | Internal | EA | MT | PC</span>
+									<span class="customers__values">None | Internal | MT | PC | Marketing </span>
 								</div>
 							</div>
 
@@ -158,7 +158,7 @@
 								<input type="text" name="customerCount" [(ngModel)]="form.customerCount" (ngModelChange)="applyForm()" class="customers__input" />
 								<div class="customers__note">
 									<span class="customers__label">Number Affected:</span>
-									<span class="customers__values">Few | Some | Many | All</span>
+									<span class="customers__values">None (0%) | Some (anything between 0% - 100%) | All (100%)</span>
 								</div>
 							</div>
 
@@ -433,7 +433,7 @@
 		<footer class="app-footer">
 
 			<div class="app-footer__action">
-				If you are worried about having your information in "the cloud," you can 
+				If you are worried about having your information in "the cloud," you can
 				<a (click)="deleteIncident()">delete your incident</a>
 				when you are done with it.
 			</div>
